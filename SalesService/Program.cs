@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.ConfigureUnitOdWork();
+builder.Services.ConfigureUnitOfWork();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Controllers.AssemblyReference).Assembly);
 

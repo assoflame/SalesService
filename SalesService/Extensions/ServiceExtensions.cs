@@ -5,7 +5,7 @@ namespace Web.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void ConfigureUnitOdWork(this IServiceCollection services)
+        public static void ConfigureUnitOfWork(this IServiceCollection services)
             => services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
