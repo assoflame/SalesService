@@ -17,6 +17,26 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Chat>()
+                .HasOne<User>(c => c.Seller)
+                .WithMany(u => u.ChatsAsSeller)
+                .HasForeignKey(c => c.SellerId);
+
+            modelBuilder.Entity<Chat>()
+                .HasOne<User>(c => c.Customer)
+                .WithMany(u => u.ChatsAsCustomer)
+                .HasForeignKey(c => c.CustomerId);
+
+            modelBuilder.Entity<UserRating>()
+                .HasOne<User>(ur => ur.Seller)
+                .WithMany(u => u.RatingsAsSeller)
+                .HasForeignKey(ur => ur.SellerId);
+
+            modelBuilder.Entity<UserRating>()
+                .HasOne<User>(ur => ur.Customer)
+                .WithMany(u => u.RatingsAsCustomer)
+                .HasForeignKey(ur => ur.CustomerId);
         }
 
         public DbSet<Chat> Chats { get; set; }

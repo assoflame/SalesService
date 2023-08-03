@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public IFormFile Image { get; set; }
+        public byte[] Image { get; set; }
 
         public Product Product { get; set; }
     }

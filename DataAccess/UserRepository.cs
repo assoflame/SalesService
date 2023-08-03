@@ -11,5 +11,10 @@ namespace DataAccess
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         public UserRepository(ApplicationContext context) : base(context) { }
+
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await GetAsync();
+        }
     }
 }

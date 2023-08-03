@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Controllers
 {
     [ApiController]
-    [Route("users/{id:int}")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
@@ -17,6 +17,14 @@ namespace Controllers
         public UsersController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _serviceManager.UserService.GetUsersAsync();
+
+            return Ok(users);
         }
     }
 }

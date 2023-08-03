@@ -22,9 +22,9 @@ namespace DataAccess
             _dbSet = context.Set<TEntity>();
         }
 
-        public void Create(TEntity entity)
+        public void Create(TEntity item)
         {
-            _dbSet.Add(entity);
+            _dbSet.Add(item);
         }
 
         public TEntity FindById(int id)
@@ -38,55 +38,61 @@ namespace DataAccess
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+                                      Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             return Apply(filter, include, orderBy).FirstOrDefault();
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            Func<IQueryable<TEntity>,IOrderedQueryable<TEntity>> orderBy = null)
+                                                       Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>
+                                                           include = null,
+                                                       Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy =
+                                                           null)
         {
             return await Apply(filter, include, orderBy).FirstOrDefaultAsync();
         }
 
         public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+                                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             return Apply(filter, include, orderBy).ToList();
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+                                                         Func<IQueryable<TEntity>,
+                                                                 IIncludableQueryable<TEntity, object>>
+                                                             include = null,
+                                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>
+                                                             orderBy = null)
         {
             return await Apply(filter, include, orderBy).ToListAsync();
         }
 
-        public void Remove(TEntity entity)
+        public void Remove(TEntity item)
         {
-            _dbSet.Remove(entity);
+            _dbSet.Remove(item);
         }
 
-        public void Update(TEntity entity)
+        public void Update(TEntity item)
         {
-            _dbSet.Update(entity);
+            _dbSet.Update(item);
         }
 
         protected IQueryable<TEntity> Apply(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include =
+                                                null,
+                                            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
 
-            if(include != null)
+            if (include != null)
             {
                 query = include(query);
             }
 
-            if(filter != null)
+            if (filter != null)
             {
                 query = query.Where(filter);
             }
@@ -94,16 +100,7 @@ namespace DataAccess
             query = orderBy is not null
                 ? orderBy(query)
                 : query;
-
             return query;
         }
-
-        //public Task<PaginatedList<TEntity>> GetPaginatedListAsync(int pageSize, int pageIndex,
-        //    Expression<Func<TEntity, bool>> filter = null,
-        //    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        //    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

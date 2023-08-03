@@ -13,6 +13,5 @@
 
         public User User { get; set; }
         public IEnumerable<ProductImage> Images { get; set; }
-        public IEnumerable<ProductRating> Ratings { get; set; }
     }
 }

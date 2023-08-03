@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesService.Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace DataAccess.Interfaces
 {
     public interface IUserRepository
     {
+        Task<IEnumerable<User>> GetUsers();
     }
 }
