@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ using System.Threading.Tasks;
 namespace Controllers
 {
     [ApiController]
-    [Route("api/products")]
     public class ProductsController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -20,19 +20,30 @@ namespace Controllers
         }
 
         [HttpGet]
+        [Route("api/products")]
         public async Task<IActionResult> GetProducts()
         {
-            var products = await _service.ProductService.GetProductsAsync();
+            var products = await _service.ProductService.GetAllProductsAsync(trackChanges: false);
 
             return Ok(products);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetProduct(int id)
+        [HttpGet]
+        [Route("api/products/{int:productId}")]
+        public async Task<IActionResult> GetProduct(int productId)
         {
-            var product = await _service.ProductService.GetProductAsync(id);
+            var product = await _service.ProductService.GetProductByIdAsync(productId, trackChanges: false);
 
             return Ok(product);
+        }
+
+        [HttpGet]
+        [Route("api/users/{int:userId}/products")]
+        public async Task<IActionResult> GetUserProduct(int userId)
+        {
+            var userProducts = await _service.ProductService.GetUserProductsAsync(userId, trackChanges: false);
+
+            return Ok(userProducts);
         }
     }
 }

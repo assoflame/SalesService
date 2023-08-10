@@ -18,11 +18,11 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Route("api/users")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _service.UserService.GetUsersAsync();
+            var users = await _service.UserService.GetAllUsersAsync(trackChanges: false);
 
             return Ok(users);
         }
@@ -31,19 +31,9 @@ namespace Controllers
         [Route("api/users/{id:int}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _service.UserService.GetUserAsync(id);
+            var user = await _service.UserService.GetUserByIdAsync(id, trackChanges: false);
 
             return Ok(user);
         }
-
-        //[HttpGet]
-        //[Route("api/users/{userId:int}/products/{productId:int}")]
-        //public async Task<IActionResult> GetUserProducts(int userId, int productId)
-        //{
-        //    var result = new { userId = userId, productId = productId };
-
-        //    return Ok(JsonSerializer.Serialize(result));
-        //}
-
     }
 }

@@ -11,30 +11,11 @@ namespace DataAccess.Interfaces
 {
     public interface IGenericRepository<TEntity>  where TEntity : class
     {
-        void Create(TEntity item);
-        TEntity FindById(int id);
-        Task<TEntity> FindByIdAsync(int id);
-
-        TEntity FirstOrDefault(Expression<Func<TEntity, bool>> filter = null,
-                               Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                               Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
-
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> filter = null,
-                                          Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include =
-                                              null,
-                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
-
-        IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
-                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
-
-        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter = null,
-                                            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include =
-                                                null,
-                                            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
-
-        void Remove(TEntity item);
-        void Update(TEntity item);
-
+        IQueryable<TEntity> FindAll(bool trackChanges);
+        IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> condition,
+            bool trackChanges);
+        void Create(TEntity entity);
+        void Update(TEntity entity);
+        void Delete(TEntity entity);
     }
 }

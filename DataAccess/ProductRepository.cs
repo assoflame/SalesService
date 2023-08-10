@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,16 @@ namespace DataAccess
     {
         public ProductRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<Product> GetProductAsync(int id)
-        {
-            return await FindByIdAsync(id);
-        }
+        public async Task<IEnumerable<Product>> GetAllProductsAsync(bool trackChanges)
+            => await FindAll(trackChanges)
+                .ToListAsync();
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
-        {
-            return await GetAsync();
-        }
+        public async Task<Product> GetProductByIdAsync(int id, bool trackChanges)
+            => await FindByCondition(product => product.Id == id, trackChanges)
+                .FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges)
+            => await FindByCondition(product => product.UserId == userId, trackChanges)
+                .ToListAsync();
     }
 }

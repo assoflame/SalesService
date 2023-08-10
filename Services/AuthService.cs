@@ -103,7 +103,7 @@ namespace Services
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtSettings["secretKey"])),
+                    Encoding.UTF8.GetBytes(jwtSettings["secretKey"])),
                 ValidateLifetime = true,
                 ValidIssuer = jwtSettings["validIssuer"],
                 ValidAudience = jwtSettings["validAudience"]
@@ -151,15 +151,15 @@ namespace Services
                 new Claim(ClaimTypes.Name, _user.Email)
             };
 
-            //var roles = (await _unitOfWork.Users.GetAsync(
-            //    include: u => u.Include(us => us.Roles)
-            //    .ThenInclude(ur => ur.Role))).Roles
-            //    .Select(role => role.Role);
+            var roles = (await _unitOfWork.Users.GetAsync(
+                    include: u => u.Include(us => us.Roles)
+                .ThenInclude(ur => ur.Role))).Roles
+                .Select(role => role.Role);
 
-            //foreach (var role in roles)
-            //{
-            //    claims.Add(new Claim("role", role.Name));
-            //}
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim("role", role.Name));
+            }
 
             return claims;
         }

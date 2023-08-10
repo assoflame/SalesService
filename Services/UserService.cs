@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
+using Entities.Exceptions;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 
@@ -18,28 +19,21 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<UserDto>> GetUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync(bool trackChanges)
         {
-            var users = await _unitOfWork.Users.GetUsersAsync();
+            var users = await _unitOfWork.Users.GetAllUsersAsync(trackChanges);
 
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> GetUserAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(int id, bool trackChanges)
         {
-            var user = await _unitOfWork.Users.GetUserAsync(id);
+            var user = await _unitOfWork.Users.GetUserByIdAsync(id, trackChanges);
+
+            if (user is null)
+                throw new UserNotFoundException(id);
 
             return _mapper.Map<UserDto>(user);
-        }
-
-        public Task BlockUserAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CreateUserAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

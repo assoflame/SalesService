@@ -9,7 +9,8 @@ namespace DataAccess.Interfaces
 {
     public interface IProductRepository
     {
-        Task<Product> GetProductAsync(int id);
-        Task<IEnumerable<Product>> GetProductsAsync();
+        Task<IEnumerable<Product>> GetAllProductsAsync(bool trackChanges);
+        Task<Product> GetProductByIdAsync(int id, bool trackChanges);
+        Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges);
     }
 }

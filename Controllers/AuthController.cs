@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
-using System.Net;
 
 namespace Controllers
 {

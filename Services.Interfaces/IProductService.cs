@@ -9,7 +9,8 @@ namespace Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductDto>> GetProductsAsync();
-        Task<ProductDto> GetProductAsync(int id);
+        Task<IEnumerable<ProductDto>> GetAllProductsAsync(bool trackChanges);
+        Task<ProductDto> GetProductByIdAsync(int id, bool trackChanges);
+        Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId, bool trackChanges);
     }
 }
