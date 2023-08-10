@@ -39,6 +39,8 @@ namespace DataAccess
                 .WithMany(u => u.RatingsAsCustomer)
                 .HasForeignKey(ur => ur.CustomerId);
 
+            modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
+
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
         }
 

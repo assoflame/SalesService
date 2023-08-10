@@ -12,7 +12,5 @@ namespace DataAccess
     {
         public UserRoleRepository(ApplicationContext context) : base(context) { }
 
-        async Task CreateAsync(UserRole userRole)
-            => await base.CreateAsync(userRole);
     }
 }

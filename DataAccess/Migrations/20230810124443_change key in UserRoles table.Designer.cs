@@ -3,6 +3,7 @@ using System;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230810124443_change key in UserRoles table")]
+    partial class changekeyinUserRolestable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +163,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "admin"
+                            Name = "moderator"
                         });
                 });
 
@@ -248,6 +251,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
                     b.HasKey("UserId", "RoleId");

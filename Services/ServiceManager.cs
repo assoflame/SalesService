@@ -15,6 +15,7 @@ namespace Services
         private readonly Lazy<IUserService> _userService;
         private readonly Lazy<IProductService> _productService;
         private readonly Lazy<IAuthService> _authService;
+        private readonly Lazy<IAdminService> _adminService;
 
         public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger,
             IConfiguration configuration)
@@ -27,10 +28,14 @@ namespace Services
 
             _authService = new Lazy<IAuthService>(
                 () => new AuthService(unitOfWork, mapper, logger, configuration));
+
+            _adminService = new Lazy<IAdminService>(
+                () => new AdminService(unitOfWork, mapper, logger));
         }
 
         public IUserService UserService => _userService.Value;
         public IProductService ProductService => _productService.Value;
         public IAuthService AuthService => _authService.Value;
+        public IAdminService AdminService => _adminService.Value;
     }
 }

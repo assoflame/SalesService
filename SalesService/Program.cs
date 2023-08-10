@@ -34,7 +34,9 @@ app.ConfigureExceptionHandler(logger);
 // app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<CheckUserStatusMiddleware>();
 app.UseAuthorization();
+
 
 app.MapControllers();
 

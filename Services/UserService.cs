@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
 using Entities.Exceptions;
+using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 
@@ -32,6 +33,16 @@ namespace Services
 
             if (user is null)
                 throw new UserNotFoundException(id);
+
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> CreateUserAsync(UserForSignUpDto userDto)
+        {
+            var user = _mapper.Map<User>(userDto);
+
+            _unitOfWork.Users.Create(user);
+            await _unitOfWork.SaveAsync();
 
             return _mapper.Map<UserDto>(user);
         }

@@ -9,6 +9,6 @@ namespace DataAccess.Interfaces
 {
     public interface IUserRoleRepository
     {
-        Task CreateAsync(UserRole userRole);
+        void Create(UserRole userRole);
     }
 }

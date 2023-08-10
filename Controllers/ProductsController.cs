@@ -29,7 +29,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Route("api/products/{int:productId}")]
+        [Route("api/products/{productId:int}")]
         public async Task<IActionResult> GetProduct(int productId)
         {
             var product = await _service.ProductService.GetProductByIdAsync(productId, trackChanges: false);
@@ -38,7 +38,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Route("api/users/{int:userId}/products")]
+        [Route("api/users/{userId:int}/products")]
         public async Task<IActionResult> GetUserProduct(int userId)
         {
             var userProducts = await _service.ProductService.GetUserProductsAsync(userId, trackChanges: false);

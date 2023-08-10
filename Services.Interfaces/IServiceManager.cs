@@ -11,5 +11,6 @@ namespace Services.Interfaces
         IUserService UserService { get; }
         IProductService ProductService { get; }
         IAuthService AuthService { get; }
+        IAdminService AdminService { get; }
     }
 }

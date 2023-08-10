@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace DataAccess
     {
         public RoleRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<Role> GetByNameAsync(string name)
-            => (await GetAsync(role => role.Name == name)).FirstOrDefault();
+        public async Task<Role> GetByNameAsync(string name, bool trackChanges)
+            => await FindByCondition(role => role.Name == name, trackChanges)
+                .FirstOrDefaultAsync();
     }
 }

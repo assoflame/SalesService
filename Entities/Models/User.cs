@@ -9,6 +9,7 @@
         public int Age { get; set; }
         public string City { get; set; }
         public byte[]? Avatar { get; set; }
+        public UserStatus Status { get; set; }
 
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
@@ -22,5 +23,11 @@
         public IEnumerable<UserRole> Roles { get; set; }
         public IEnumerable<Chat> ChatsAsCustomer { get; set; }
         public IEnumerable<Chat> ChatsAsSeller { get; set; }
+    }
+
+    public enum UserStatus
+    {
+        Normal,
+        Blocked
     }
 }

@@ -9,6 +9,6 @@ namespace DataAccess.Interfaces
 {
     public interface IRoleRepository
     {
-        Task<Role> GetByNameAsync(string name);
+        Task<Role> GetByNameAsync(string name, bool trackChanges);
     }
 }

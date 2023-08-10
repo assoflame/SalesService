@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.DataTransferObjects
+namespace Services.Interfaces
 {
-    public record UserDto(int Id, string FullName, string City, int Age, int Status);
+    public interface IAdminService
+    {
+        Task BlockUser(int userId);
+    }
 }

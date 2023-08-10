@@ -18,16 +18,6 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
-        [Route("api/users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _service.UserService.GetAllUsersAsync(trackChanges: false);
-
-            return Ok(users);
-        }
-
-        [HttpGet]
         [Route("api/users/{id:int}")]
         public async Task<IActionResult> GetUser(int id)
         {

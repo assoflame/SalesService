@@ -15,7 +15,18 @@ namespace DataAccess.Configuration
         {
             builder.HasData
                 (
-                    new User() { FirstName = "", LastName = "" }
+                    new User()
+                    {
+                        Email = "admin@gmail.com",
+                        FirstName = "admin",
+                        LastName = "admin",
+                        City = "Kazan",
+                        Age = 100,
+                        PasswordHash = "93C7076CD06276AA3B40BABBD75787D9",
+                        PasswordSalt = "adminadmin"
+
+                        // admin password = "SUPERUSER"
+                    }
                 );
         }
     }

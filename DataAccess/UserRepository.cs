@@ -23,5 +23,11 @@ namespace DataAccess
         public async Task<User> GetUserByIdAsync(int id, bool trackChanges)
             => await FindByCondition(user => user.Id == id, trackChanges)
                     .FirstOrDefaultAsync();
+
+        public async Task<User> GetUserByEmailAsync(string email, bool trackChanges)
+            => await FindByCondition(user => user.Email == email, trackChanges)
+                .Include(user => user.Roles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync();
     }
 }

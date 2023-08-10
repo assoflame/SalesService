@@ -6,5 +6,6 @@ namespace Services.Interfaces
     {
         Task<IEnumerable<UserDto>> GetAllUsersAsync(bool trackChanges);
         Task<UserDto> GetUserByIdAsync(int id, bool trackChanges);
+        Task<UserDto> CreateUserAsync(UserForSignUpDto userDto);
     }
 }

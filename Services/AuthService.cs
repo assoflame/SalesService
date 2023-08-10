@@ -38,13 +38,16 @@ namespace Services
             user.PasswordSalt = user.FirstName + user.LastName;
             user.PasswordHash = ComputeMD5HashString(userForSignUpDto.Password + user.PasswordSalt);
 
-            await _unitOfWork.Users.CreateAsync(user);
+            _unitOfWork.Users.Create(user);
 
-            var role = await _unitOfWork.Roles.GetByNameAsync("user");
+            var role = await _unitOfWork.Roles.GetByNameAsync("user", trackChanges: false);
 
-            await _unitOfWork.UserRoles.CreateAsync(
-                new UserRole { User = user, Role = role }
-                );
+            _unitOfWork.UserRoles.Create( new UserRole
+                {
+                    User = user,
+                    RoleId = role.Id
+                }
+            );
 
             await _unitOfWork.SaveAsync();
         }
@@ -52,7 +55,7 @@ namespace Services
         public async Task<bool> ValidateUser(UserForSignInDto userForSignInDto)
         {
             _user = await _unitOfWork.Users
-                .GetAsync(u => u.Email == userForSignInDto.Email);
+                .GetUserByEmailAsync(userForSignInDto.Email, trackChanges: true);
 
             if (_user == null)
             {
@@ -148,13 +151,11 @@ namespace Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, _user.Email)
+                new Claim(ClaimTypes.Name, _user.Email),
+                new Claim("Status", _user.Status.ToString())
             };
 
-            var roles = (await _unitOfWork.Users.GetAsync(
-                    include: u => u.Include(us => us.Roles)
-                .ThenInclude(ur => ur.Role))).Roles
-                .Select(role => role.Role);
+            var roles = _user.Roles.Select(ur => ur.Role);
 
             foreach (var role in roles)
             {
@@ -184,7 +185,9 @@ namespace Services
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
 
-            var user = await _unitOfWork.Users.GetAsync(user => user.Email == principal.Identity.Name);
+            var user = await _unitOfWork.Users
+                .GetUserByEmailAsync(principal.Identity.Name, trackChanges: true);
+
             if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
                    user.RefreshTokenExpiryTime > DateTime.Now)
             {
