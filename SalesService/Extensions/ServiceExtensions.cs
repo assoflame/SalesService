@@ -1,8 +1,11 @@
 ﻿using DataAccess;
 using DataAccess.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Web.Extensions
 {
@@ -20,5 +23,31 @@ namespace Web.Extensions
 
         public static void ConfigureLoggerManager(this IServiceCollection services)
             => services.AddSingleton<ILoggerManager, LoggerManager>();
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = jwtSettings["validIssuer"],
+                        ValidAudience = jwtSettings["validAudience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["secretKey"]))
+                    };
+                });
+        }
     }
 }

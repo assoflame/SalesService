@@ -11,5 +11,15 @@ namespace DataAccess
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         public ProductRepository(ApplicationContext context) : base(context) { }
+
+        public async Task<Product> GetProductAsync(int id)
+        {
+            return await FindByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsAsync()
+        {
+            return await GetAsync();
+        }
     }
 }

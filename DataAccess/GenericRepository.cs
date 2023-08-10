@@ -27,6 +27,11 @@ namespace DataAccess
             _dbSet.Add(item);
         }
 
+        public async Task CreateAsync(TEntity item)
+        {
+            await _dbSet.AddAsync(item);
+        }
+
         public TEntity FindById(int id)
         {
             return _dbSet.Find(id);

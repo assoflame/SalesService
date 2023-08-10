@@ -11,6 +11,8 @@ namespace Web
             CreateMap<User, UserDto>()
                 .ForCtorParam(nameof(UserDto.FullName),
                 opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)));
+
+            CreateMap<UserForSignUpDto, User>();
         }
     }
 }

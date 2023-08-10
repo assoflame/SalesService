@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccess.Configuration;
+using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,8 @@ namespace DataAccess
                 .HasOne<User>(ur => ur.Customer)
                 .WithMany(u => u.RatingsAsCustomer)
                 .HasForeignKey(ur => ur.CustomerId);
+
+            modelBuilder.ApplyConfiguration(new RolesConfiguration());
         }
 
         public DbSet<Chat> Chats { get; set; }

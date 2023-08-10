@@ -3,14 +3,18 @@
     public class User
     {
         public int Id { get; set; }
+        public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
         public string City { get; set; }
-        public byte[] Avatar { get; set; }
+        public byte[]? Avatar { get; set; }
 
         public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }       
+        public string PasswordSalt { get; set; }
+
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
         public IEnumerable<UserRating> RatingsAsCustomer { get; set; }

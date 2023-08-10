@@ -9,23 +9,27 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _unitOfWork.Users.GetUsers();
+            var users = await _unitOfWork.Users.GetUsersAsync();
 
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public Task<UserDto> GetUserAsync(int id)
+        public async Task<UserDto> GetUserAsync(int id)
         {
-            return null;
+            var user = await _unitOfWork.Users.GetUserAsync(id);
+
+            return _mapper.Map<UserDto>(user);
         }
 
         public Task BlockUserAsync(int id)

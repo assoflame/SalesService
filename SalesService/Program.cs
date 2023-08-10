@@ -1,7 +1,4 @@
-using DataAccess;
-using Microsoft.EntityFrameworkCore;
 using SalesService.Extensions;
-using Services;
 using Services.Interfaces;
 using Web.Extensions;
 
@@ -19,6 +16,9 @@ builder.Services.ConfigureServiceManager();
 
 builder.Services.ConfigureUnitOfWork();
 
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Controllers.AssemblyReference).Assembly);
 
@@ -28,10 +28,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 var logger = app.Services.GetService<ILoggerManager>();
+
 app.ConfigureExceptionHandler(logger);
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
