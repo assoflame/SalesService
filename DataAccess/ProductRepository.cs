@@ -24,5 +24,9 @@ namespace DataAccess
         public async Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges)
             => await FindByCondition(product => product.UserId == userId, trackChanges)
                 .ToListAsync();
+
+        public async Task<Product> GetUserProductAsync(int userId, int productId, bool trackChanges)
+            => await FindByCondition(product => product.UserId == userId && product.Id == productId, trackChanges)
+                .FirstOrDefaultAsync();
     }
 }

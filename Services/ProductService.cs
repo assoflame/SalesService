@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
 using Entities.Exceptions;
+using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -24,16 +25,16 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(bool trackChanges)
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
-            var products = await _unitOfWork.Products.GetAllProductsAsync(trackChanges);
+            var products = await _unitOfWork.Products.GetAllProductsAsync(trackChanges: false);
 
             return _mapper.Map<IEnumerable<ProductDto>>(products);
         }
 
-        public async Task<ProductDto> GetProductByIdAsync(int id, bool trackChanges)
+        public async Task<ProductDto> GetProductByIdAsync(int id)
         {
-            var product = await _unitOfWork.Products.GetProductByIdAsync(id, trackChanges);
+            var product = await _unitOfWork.Products.GetProductByIdAsync(id, trackChanges: false);
 
             if (product is null)
                 throw new ProductNotFoundException(id);
@@ -41,11 +42,55 @@ namespace Services
             return _mapper.Map<ProductDto>(product);
         }
 
-        public async Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId, bool trackChanges)
+        public async Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId)
         {
-            var userProducts = await _unitOfWork.Products.GetUserProductsAsync(userId, trackChanges);
+            var userProducts = await _unitOfWork.Products.GetUserProductsAsync(userId, trackChanges: false);
 
             return _mapper.Map<IEnumerable<ProductDto>>(userProducts);
+        }
+
+        public async Task DeleteProductAsync(int productId)
+        {
+            var product = await _unitOfWork.Products
+                .GetProductByIdAsync(productId, trackChanges: true);
+
+            if (product is null)
+                throw new ProductNotFoundException(productId);
+
+            _unitOfWork.Products.Delete(product);
+
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto)
+        {
+            var productEntity = _mapper.Map<Product>(productForCreationDto);
+
+            productEntity.UserId = userId;
+            productEntity.CreationDate = DateTime.UtcNow;
+
+            _unitOfWork.Products.Create(productEntity);
+
+            await _unitOfWork.SaveAsync();
+
+            return _mapper.Map<ProductDto>(productEntity);
+        }
+
+        public async Task<ProductDto> SellProductAsync(int userId, int productId)
+        {
+            var product = await _unitOfWork.Products
+                .GetUserProductAsync(userId, productId, trackChanges: true);
+
+            if (product is null)
+                throw new ProductNotFoundException(productId);
+
+            product.IsSold = true;
+
+            _unitOfWork.Products.Update(product);
+
+            await _unitOfWork.SaveAsync();
+
+            return _mapper.Map<ProductDto>(product);
         }
     }
 }

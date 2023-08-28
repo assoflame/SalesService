@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace Controllers
@@ -10,20 +12,13 @@ namespace Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly IServiceManager _services;
 
-        public UsersController(IServiceManager service)
+        public UsersController(IServiceManager services)
         {
-            _service = service;
+            _services = services;
         }
 
-        [HttpGet]
-        [Route("api/users/{id:int}")]
-        public async Task<IActionResult> GetUser(int id)
-        {
-            var user = await _service.UserService.GetUserByIdAsync(id, trackChanges: false);
 
-            return Ok(user);
-        }
     }
 }

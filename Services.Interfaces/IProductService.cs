@@ -9,8 +9,12 @@ namespace Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductDto>> GetAllProductsAsync(bool trackChanges);
-        Task<ProductDto> GetProductByIdAsync(int id, bool trackChanges);
-        Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId, bool trackChanges);
+        Task<IEnumerable<ProductDto>> GetAllProductsAsync();
+        Task<ProductDto> GetProductByIdAsync(int id);
+        Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId);
+        Task DeleteProductAsync(int productId);
+
+        Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto);
+        Task<ProductDto> SellProductAsync(int userId, int productId);
     }
 }

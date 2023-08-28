@@ -20,29 +20,19 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllUsersAsync(bool trackChanges)
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            var users = await _unitOfWork.Users.GetAllUsersAsync(trackChanges);
+            var users = await _unitOfWork.Users.GetAllUsersAsync(trackChanges: false);
 
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id, bool trackChanges)
+        public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = await _unitOfWork.Users.GetUserByIdAsync(id, trackChanges);
+            var user = await _unitOfWork.Users.GetUserByIdAsync(id, trackChanges: false);
 
             if (user is null)
                 throw new UserNotFoundException(id);
-
-            return _mapper.Map<UserDto>(user);
-        }
-
-        public async Task<UserDto> CreateUserAsync(UserForSignUpDto userDto)
-        {
-            var user = _mapper.Map<User>(userDto);
-
-            _unitOfWork.Users.Create(user);
-            await _unitOfWork.SaveAsync();
 
             return _mapper.Map<UserDto>(user);
         }

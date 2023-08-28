@@ -13,6 +13,10 @@ namespace Web
                 opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)));
 
             CreateMap<UserForSignUpDto, User>();
+
+            CreateMap<ProductForCreationDto, Product>();
+
+            CreateMap<Product, ProductDto>();
         }
     }
 }

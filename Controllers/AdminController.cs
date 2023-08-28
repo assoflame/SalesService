@@ -13,29 +13,38 @@ namespace Controllers
     [Authorize(Roles = "admin")]
     public class AdminController : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly IServiceManager _services;
 
-        public AdminController(IServiceManager service)
+        public AdminController(IServiceManager services)
         {
-            _service = service;
+            _services = services;
         }
 
         [HttpGet]
-        [Route("api/users")]
+        [Route("api/admin/users")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _service.UserService.GetAllUsersAsync(trackChanges: false);
+            var users = await _services.UserService.GetAllUsersAsync();
 
             return Ok(users);
         }
 
         [HttpPatch]
-        [Route("api/admin/users/{userId:int}/block")]
+        [Route("api/admin/users/{userId:int}")]
         public async Task<IActionResult> BlockUser(int userId)
         {
-            await _service.AdminService.BlockUser(userId);
+            await _services.AdminService.BlockUser(userId);
 
-            return Ok();
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("api/admin/products/{productId:int}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            await _services.ProductService.DeleteProductAsync(productId);
+
+            return NoContent();
         }
     }
 }

@@ -129,7 +129,7 @@ namespace Services
         public async Task<TokenDto> CreateToken(bool populateExp)
         {
             var signingCredentials = GetSigningCredentials();
-            var claims = await GetClaims();
+            var claims = GetClaims();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
             var refreshToken = GenerateRefreshToken();
             _user.RefreshToken = refreshToken;
@@ -147,12 +147,13 @@ namespace Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        private async Task<List<Claim>> GetClaims()
+        private List<Claim> GetClaims()
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, _user.Email),
-                new Claim("Status", _user.Status.ToString())
+                new Claim(ClaimTypes.Email, _user.Email),
+                new Claim("Status", _user.Status.ToString()),
+                new Claim("Id", _user.Id.ToString())
             };
 
             var roles = _user.Roles.Select(ur => ur.Role);

@@ -12,18 +12,18 @@ namespace Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly IServiceManager _services;
 
-        public ProductsController(IServiceManager service)
+        public ProductsController(IServiceManager services)
         {
-            _service = service;
+            _services = services;
         }
 
         [HttpGet]
         [Route("api/products")]
         public async Task<IActionResult> GetProducts()
         {
-            var products = await _service.ProductService.GetAllProductsAsync(trackChanges: false);
+            var products = await _services.ProductService.GetAllProductsAsync();
 
             return Ok(products);
         }
@@ -32,16 +32,16 @@ namespace Controllers
         [Route("api/products/{productId:int}")]
         public async Task<IActionResult> GetProduct(int productId)
         {
-            var product = await _service.ProductService.GetProductByIdAsync(productId, trackChanges: false);
+            var product = await _services.ProductService.GetProductByIdAsync(productId);
 
             return Ok(product);
         }
 
         [HttpGet]
         [Route("api/users/{userId:int}/products")]
-        public async Task<IActionResult> GetUserProduct(int userId)
+        public async Task<IActionResult> GetUserProducts(int userId)
         {
-            var userProducts = await _service.ProductService.GetUserProductsAsync(userId, trackChanges: false);
+            var userProducts = await _services.ProductService.GetUserProductsAsync(userId);
 
             return Ok(userProducts);
         }
