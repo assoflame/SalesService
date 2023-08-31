@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Shared.RequestFeatures;
 
 namespace Services
 {
@@ -26,11 +27,15 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetAllProductsAsync(ProductParameters productParameters)
         {
-            var products = await _unitOfWork.Products.GetAllProductsAsync(trackChanges: false);
+            var productsWithMetaData = await _unitOfWork
+                .Products
+                .GetAllProductsAsync(productParameters, trackChanges: false);
 
-            return _mapper.Map<IEnumerable<ProductDto>>(products);
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(productsWithMetaData);
+
+            return (products: productsDto, metaData: productsWithMetaData.MetaData);
         }
 
         public async Task<ProductDto> GetProductByIdAsync(int id)

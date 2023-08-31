@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Shared.RequestFeatures;
 
 namespace Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductDto>> GetAllProductsAsync();
+        Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetAllProductsAsync(ProductParameters productParameters);
         Task<ProductDto> GetProductByIdAsync(int id);
         Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId);
         Task DeleteProductAsync(int productId);

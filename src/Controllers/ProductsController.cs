@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Controllers
@@ -23,11 +25,15 @@ namespace Controllers
 
         [HttpGet]
         [Route("api/products")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts([FromQuery] ProductParameters productParameters)
         {
-            var products = await _services.ProductService.GetAllProductsAsync();
+            var pagedProducts = await _services.ProductService
+                .GetAllProductsAsync(productParameters);
 
-            return Ok(products);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedProducts.metaData));
+
+            return Ok(pagedProducts.products);
         }
 
         [HttpGet]
