@@ -130,6 +130,11 @@ namespace Services
                 if (product is null || product.UserId != userId)
                     throw new ProductNotFoundException(productId);
 
+                int maxImagesCount = 10;
+
+                if (product.Images.Count() + images.Count() > maxImagesCount)
+                    throw new TooManyImagesCountException(maxImagesCount);
+
                 var productImages = new List<ProductImage>();
 
                 foreach (var image in images)
