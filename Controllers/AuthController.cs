@@ -39,13 +39,6 @@ namespace Controllers
             return Ok(new { Token = await _services.AuthService.CreateToken(true) });
         }
 
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<IActionResult> Logout()
-        //{
-
-        //}
-
         [HttpPost]
         [Route("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)

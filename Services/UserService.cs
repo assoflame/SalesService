@@ -36,5 +36,25 @@ namespace Services
 
             return _mapper.Map<UserDto>(user);
         }
+
+        public async Task RateUser(int customerId, int sellerId, RateDto rateDto)
+        {
+            var seller = await _unitOfWork.Users.GetUserByIdAsync(sellerId, trackChanges: false);
+
+            if (seller is null)
+                throw new UserNotFoundException(sellerId);
+
+            var rating = new UserRating
+            {
+                CustomerId = customerId,
+                SellerId = sellerId,
+                StarsCount = rateDto.StarsCount,
+                Comment = rateDto.Comment
+            };
+
+            _unitOfWork.UserRatings.Create(rating);
+
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

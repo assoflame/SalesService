@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Controllers
 {
-    [ApiController]
+    [ApiController] 
     public class ProductsController : ControllerBase
     {
         private readonly IServiceManager _services;
@@ -44,6 +46,34 @@ namespace Controllers
             var userProducts = await _services.ProductService.GetUserProductsAsync(userId);
 
             return Ok(userProducts);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/products")]
+        public async Task<IActionResult> CreateProduct(ProductForCreationDto productForCreationDto)
+        {
+            if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                var product = await _services.ProductService.CreateProductAsync(userId, productForCreationDto);
+                return Ok(product);
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/products/{productId:int}")]
+        public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
+        {
+            if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                await _services.ProductService.AddPhotosAsync(userId, productId, files);
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

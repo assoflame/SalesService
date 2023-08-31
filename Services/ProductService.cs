@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Services
 {
@@ -62,7 +63,8 @@ namespace Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto)
+        public async Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto,
+            IFormFileCollection? images = null)
         {
             var productEntity = _mapper.Map<Product>(productForCreationDto);
 
@@ -73,7 +75,26 @@ namespace Services
 
             await _unitOfWork.SaveAsync();
 
+            await AddPhotosAsync(userId, productEntity.Id, images);
+
             return _mapper.Map<ProductDto>(productEntity);
+        }
+
+        public async Task<ProductDto> UpdateProductAsync(int userId, ProductForUpdateDto productForUpdateDto)
+        {
+            var product = await _unitOfWork.Products
+                .GetProductByIdAsync(productForUpdateDto.Id, trackChanges: true);
+
+            if (product is null || userId != product.UserId)
+                throw new ProductNotFoundException(productForUpdateDto.Id);
+
+            var freshProduct = _mapper.Map<Product>(productForUpdateDto);
+
+            _unitOfWork.Products.Update(freshProduct);
+
+            await _unitOfWork.SaveAsync();
+
+            return _mapper.Map<ProductDto>(freshProduct);
         }
 
         public async Task<ProductDto> SellProductAsync(int userId, int productId)
@@ -91,6 +112,43 @@ namespace Services
             await _unitOfWork.SaveAsync();
 
             return _mapper.Map<ProductDto>(product);
+        }
+
+        public async Task AddPhotosAsync(int userId, int productId, IFormFileCollection? images)
+        {
+            if (images is not null)
+            {
+                var product = await _unitOfWork
+                    .Products
+                    .GetProductByIdAsync(productId, trackChanges: false);
+
+                if (product is null || product.UserId != userId)
+                    throw new ProductNotFoundException(productId);
+
+                var productImages = new List<ProductImage>();
+
+                foreach (var image in images)
+                {
+                    if (image is not null && image.Length > 0)
+                        productImages.Add(CreateProductImage(product, image));
+                }
+
+                _unitOfWork.ProductImages.CreateRange(productImages);
+
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        private ProductImage CreateProductImage(Product product, IFormFile image)
+        {
+            var productImage = new ProductImage { ProductId = product.Id };
+
+            using (var binaryReader = new BinaryReader(image.OpenReadStream()))
+            {
+                productImage.Image = binaryReader.ReadBytes((int)image.Length);
+            }
+
+            return productImage;
         }
     }
 }

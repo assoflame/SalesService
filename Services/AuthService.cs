@@ -74,12 +74,6 @@ namespace Services
             return true;
         }
 
-        public Task LogOut()
-        {
-            // delete tokens
-            throw new NotImplementedException();
-        }
-
         private string ComputeMD5HashString(string str)
         {
             var md5 = MD5.Create();

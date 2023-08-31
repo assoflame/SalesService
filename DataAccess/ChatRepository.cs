@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,11 @@ namespace DataAccess
         public ChatRepository(ApplicationContext context)
             : base(context) { }
 
-
+        public async Task<Chat?> GetChatByUsersAsync(int sellerId, int customerId, bool trackChanges)
+           => await FindByCondition(
+               chat => chat.SellerId == sellerId && chat.CustomerId == customerId,
+               trackChanges)
+                .FirstOrDefaultAsync();
+                        
     }
 }

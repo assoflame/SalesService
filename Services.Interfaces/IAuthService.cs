@@ -13,6 +13,5 @@ namespace Services.Interfaces
         Task<bool> ValidateUser(UserForSignInDto userForSignInDto);
         Task<TokenDto> CreateToken(bool populateExp);
         Task<TokenDto> RefreshToken(TokenDto tokenDto);
-        Task LogOut();
     }
 }

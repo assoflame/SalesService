@@ -15,18 +15,22 @@ namespace DataAccess
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync(bool trackChanges)
             => await FindAll(trackChanges)
+                .Include(product => product.Images)
                 .ToListAsync();
 
-        public async Task<Product> GetProductByIdAsync(int id, bool trackChanges)
+        public async Task<Product?> GetProductByIdAsync(int id, bool trackChanges)
             => await FindByCondition(product => product.Id == id, trackChanges)
+                .Include(product => product.Images)
                 .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges)
             => await FindByCondition(product => product.UserId == userId, trackChanges)
+                .Include(product => product.Images)
                 .ToListAsync();
 
-        public async Task<Product> GetUserProductAsync(int userId, int productId, bool trackChanges)
+        public async Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges)
             => await FindByCondition(product => product.UserId == userId && product.Id == productId, trackChanges)
+                .Include(product => product.Images)
                 .FirstOrDefaultAsync();
     }
 }

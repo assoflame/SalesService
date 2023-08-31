@@ -11,5 +11,8 @@ namespace DataAccess
     public class ProductImageRepository : GenericRepository<ProductImage>, IProductImageRepository
     {
         public ProductImageRepository(ApplicationContext context) : base(context) { }
+
+        public void CreateRange(IEnumerable<ProductImage> productImages)
+            => DbContext.AddRange(productImages);
     }
 }

@@ -16,7 +16,14 @@ namespace Web
 
             CreateMap<ProductForCreationDto, Product>();
 
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>()
+                .ForCtorParam(nameof(ProductDto.Images),
+                    opt => opt.MapFrom(
+                        product => product
+                            .Images
+                            .Select(image => Convert.ToBase64String(image.Image))
+                            .ToArray())
+                    );
         }
     }
 }
