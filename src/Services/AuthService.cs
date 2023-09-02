@@ -55,7 +55,7 @@ namespace Services
         public async Task<bool> ValidateUser(UserForSignInDto userForSignInDto)
         {
             _user = await _unitOfWork.Users
-                .GetUserByEmailAsync(userForSignInDto.Email, trackChanges: true);
+                .GetUserByEmailAsync(userForSignInDto.Email, trackChanges: false);
 
             if (_user == null)
             {
