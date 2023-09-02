@@ -12,7 +12,8 @@ namespace DataAccess.Interfaces
     {
         Task<PagedList<Product>> GetAllProductsAsync(ProductParameters productParameters, bool trackChanges);
         Task<Product?> GetProductByIdAsync(int id, bool trackChanges);
-        Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges);
+        Task<PagedList<Product>> GetUserProductsAsync(
+            int userId, ProductParameters productParameters, bool trackChanges);
         Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges);
         void Delete(Product product);
         void Create(Product product);

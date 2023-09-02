@@ -47,22 +47,31 @@ namespace Controllers
 
         [HttpGet]
         [Route("api/users/{userId:int}/products")]
-        public async Task<IActionResult> GetUserProducts(int userId)
+        public async Task<IActionResult> GetUserProducts(int userId, [FromQuery] ProductParameters productParameters)
         {
-            var userProducts = await _services.ProductService.GetUserProductsAsync(userId);
+            var userProducts = await _services
+                .ProductService
+                .GetUserProductsAsync(userId, productParameters);
 
-            return Ok(userProducts);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(userProducts.metaData));
+
+            return Ok(userProducts.products);
         }
 
         [Authorize]
         [HttpPost]
         [Route("api/products")]
-        public async Task<IActionResult> CreateProduct(ProductForCreationDto productForCreationDto)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productForCreationDto)
         {
+            if (productForCreationDto is null)
+                return BadRequest("product for creationt dto object is null");
+
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
                 var product = await _services.ProductService.CreateProductAsync(userId, productForCreationDto);
-                return Ok(product);
+
+                return Ok();
             }
 
             return BadRequest();

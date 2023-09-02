@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using SalesService.Entities.Models;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,19 @@ namespace DataAccess
     {
         public UserRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync(bool trackChanges)
-            => await FindAll(trackChanges)
-                .OrderBy(user => user.FirstName)
+        public async Task<PagedList<User>> GetAllUsersAsync(UserParameters userParams, bool trackChanges)
+        {
+            var products = await FindAll(trackChanges)
+                .OrderBy(user => string.Concat(user.FirstName, user.LastName))
+                .Skip((userParams.PageNumber - 1) * userParams.PageSize)
+                .Take(userParams.PageSize)
                 .ToListAsync();
+
+            var count = await FindAll(trackChanges: false)
+                .CountAsync();
+
+            return new PagedList<User>(products, count, userParams.PageNumber, userParams.PageSize);
+        }
 
         public async Task<User?> GetUserByIdAsync(int id, bool trackChanges)
             => await FindByCondition(user => user.Id == id, trackChanges)

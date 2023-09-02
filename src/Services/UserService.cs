@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Services
 {
@@ -20,11 +21,16 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        public async Task<(IEnumerable<UserDto> users, MetaData metaData)>
+            GetAllUsersAsync(UserParameters userParams)
         {
-            var users = await _unitOfWork.Users.GetAllUsersAsync(trackChanges: false);
+            var usersWithMetaData = await _unitOfWork
+                .Users
+                .GetAllUsersAsync(userParams, trackChanges: false);
 
-            return _mapper.Map<IEnumerable<UserDto>>(users);
+            var users = _mapper.Map<IEnumerable<UserDto>>(usersWithMetaData);
+
+            return (users: users, metaData: usersWithMetaData.MetaData);
         }
 
         public async Task<UserDto> GetUserByIdAsync(int id)

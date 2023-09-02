@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Controllers
@@ -22,11 +24,14 @@ namespace Controllers
 
         [HttpGet]
         [Route("api/admin/users")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParams)
         {
-            var users = await _services.UserService.GetAllUsersAsync();
+            var usersWithMetaData = await _services.UserService.GetAllUsersAsync(userParams);
 
-            return Ok(users);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(usersWithMetaData.metaData));
+
+            return Ok(usersWithMetaData.users);
         }
 
         [HttpPatch]

@@ -23,7 +23,7 @@ namespace DataAccess
                 .Take(productParameters.PageSize)
                 .ToListAsync();
 
-            var count = await FindAll(trackChanges)
+            var count = await FindAll(trackChanges: false)
                 .CountAsync();
 
             return new PagedList<Product>
@@ -35,10 +35,22 @@ namespace DataAccess
                 .Include(product => product.Images)
                 .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Product>> GetUserProductsAsync(int userId, bool trackChanges)
-            => await FindByCondition(product => product.UserId == userId, trackChanges)
+        public async Task<PagedList<Product>> GetUserProductsAsync(
+            int userId,
+            ProductParameters productParameters,
+            bool trackChanges)
+        {
+            var userProducts = await FindByCondition(product => product.UserId == userId, trackChanges)
                 .Include(product => product.Images)
+                .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
+                .Take(productParameters.PageSize)
                 .ToListAsync();
+
+            var count = await FindByCondition(product => product.UserId == userId, trackChanges: false)
+                .CountAsync();
+
+            return new PagedList<Product>(userProducts, count, productParameters.PageNumber, productParameters.PageSize);
+        }
 
         public async Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges)
             => await FindByCondition(product => product.UserId == userId && product.Id == productId, trackChanges)

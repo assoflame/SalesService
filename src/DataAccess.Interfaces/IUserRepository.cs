@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using SalesService.Entities.Models;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace DataAccess.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllUsersAsync(bool trackChanges);
+        Task<PagedList<User>> GetAllUsersAsync(UserParameters userParams, bool trackChanges);
         Task<User?> GetUserByIdAsync(int id, bool trackChanges);
         Task<User?> GetUserByEmailAsync(string email, bool trackChanges);
         void Create(User user);

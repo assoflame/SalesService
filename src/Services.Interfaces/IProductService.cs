@@ -13,7 +13,7 @@ namespace Services.Interfaces
     {
         Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetAllProductsAsync(ProductParameters productParameters);
         Task<ProductDto> GetProductByIdAsync(int id);
-        Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId);
+        Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters);
         Task DeleteProductAsync(int productId);
         Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto,
             IFormFileCollection? images = null);

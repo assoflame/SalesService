@@ -27,7 +27,8 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetAllProductsAsync(ProductParameters productParameters)
+        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)>
+            GetAllProductsAsync(ProductParameters productParameters)
         {
             var productsWithMetaData = await _unitOfWork
                 .Products
@@ -48,11 +49,15 @@ namespace Services
             return _mapper.Map<ProductDto>(product);
         }
 
-        public async Task<IEnumerable<ProductDto>> GetUserProductsAsync(int userId)
+        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters)
         {
-            var userProducts = await _unitOfWork.Products.GetUserProductsAsync(userId, trackChanges: false);
+            var userProductsWithMetaData = await _unitOfWork
+                .Products
+                .GetUserProductsAsync(userId, productParameters, trackChanges: false);
 
-            return _mapper.Map<IEnumerable<ProductDto>>(userProducts);
+            var productsDto = _mapper.Map<IEnumerable<ProductDto>>(userProductsWithMetaData);
+
+            return (products: productsDto, metaData: userProductsWithMetaData.MetaData);
         }
 
         public async Task DeleteProductAsync(int productId)
