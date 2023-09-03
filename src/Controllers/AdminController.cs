@@ -13,6 +13,7 @@ namespace Controllers
 {
     [ApiController]
     [Authorize(Roles = "admin")]
+    [Route("api/[controller]")]
     public class AdminController : ControllerBase
     {
         private readonly IServiceManager _services;
@@ -23,7 +24,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Route("api/admin/users")]
+        [Route("users")]
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParams)
         {
             var usersWithMetaData = await _services.UserService.GetAllUsersAsync(userParams);
@@ -35,7 +36,7 @@ namespace Controllers
         }
 
         [HttpPatch]
-        [Route("api/admin/users/{userId:int}")]
+        [Route("users/{userId:int}")]
         public async Task<IActionResult> BlockUser(int userId)
         {
             await _services.AdminService.BlockUser(userId);
@@ -44,7 +45,7 @@ namespace Controllers
         }
 
         [HttpDelete]
-        [Route("api/admin/products/{productId:int}")]
+        [Route("products/{productId:int}")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
             await _services.ProductService.DeleteProductAsync(productId);

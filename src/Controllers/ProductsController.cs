@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Controllers
 {
-    [ApiController] 
+    [ApiController]
+    [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly IServiceManager _services;
@@ -24,7 +25,6 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Route("api/products")]
         public async Task<IActionResult> GetProducts([FromQuery] ProductParameters productParameters)
         {
             var pagedProducts = await _services.ProductService
@@ -36,8 +36,7 @@ namespace Controllers
             return Ok(pagedProducts.products);
         }
 
-        [HttpGet]
-        [Route("api/products/{productId:int}")]
+        [HttpGet("{productId:int}")]
         public async Task<IActionResult> GetProduct(int productId)
         {
             var product = await _services.ProductService.GetProductByIdAsync(productId);
@@ -46,7 +45,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        [Route("api/users/{userId:int}/products")]
+        [Route("/api/users/{userId:int}/products")]
         public async Task<IActionResult> GetUserProducts(int userId, [FromQuery] ProductParameters productParameters)
         {
             var userProducts = await _services
@@ -61,7 +60,6 @@ namespace Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/products")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productForCreationDto)
         {
             if (productForCreationDto is null)
@@ -78,8 +76,7 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [Route("api/products/{productId:int}")]
+        [HttpPost("{productId:int}")]
         public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))

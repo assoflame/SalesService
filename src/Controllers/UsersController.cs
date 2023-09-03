@@ -10,6 +10,7 @@ using System.Text.Json;
 namespace Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IServiceManager _services;
@@ -20,14 +21,17 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [Route("api/users/{sellerId:int}")]
-        public async Task<IActionResult> RateUser(int sellerId, RateDto rateDto)
+        [HttpPost("{sellerId:int}")]
+        public async Task<IActionResult> RateUser(int sellerId, [FromBody] RateDto rateDto)
         {
+            if (rateDto is null)
+                return BadRequest();
+
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var customerId) &&
                 sellerId != customerId)
             {
                 await _services.UserService.RateUser(customerId, sellerId, rateDto);
+
                 return Ok();
             }
 
