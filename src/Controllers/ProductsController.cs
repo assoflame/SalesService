@@ -25,10 +25,10 @@ namespace Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromQuery] ProductParameters productParameters)
+        public async Task<IActionResult> GetProducts([FromQuery] ProductParameters productParams)
         {
             var pagedProducts = await _services.ProductService
-                .GetAllProductsAsync(productParameters);
+                .GetAllProductsAsync(productParams);
 
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(pagedProducts.metaData));
@@ -36,7 +36,7 @@ namespace Controllers
             return Ok(pagedProducts.products);
         }
 
-        [HttpGet("{productId:int}")]
+        [HttpGet("{productId:int}", Name = "ProductById")]
         public async Task<IActionResult> GetProduct(int productId)
         {
             var product = await _services.ProductService.GetProductByIdAsync(productId);
@@ -46,11 +46,11 @@ namespace Controllers
 
         [HttpGet]
         [Route("/api/users/{userId:int}/products")]
-        public async Task<IActionResult> GetUserProducts(int userId, [FromQuery] ProductParameters productParameters)
+        public async Task<IActionResult> GetUserProducts(int userId, [FromQuery] ProductParameters productParams)
         {
             var userProducts = await _services
                 .ProductService
-                .GetUserProductsAsync(userId, productParameters);
+                .GetUserProductsAsync(userId, productParams);
 
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(userProducts.metaData));
@@ -60,16 +60,16 @@ namespace Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productForCreationDto)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productCreationDto)
         {
-            if (productForCreationDto is null)
-                return BadRequest("product for creationt dto object is null");
+            if (productCreationDto is null)
+                return BadRequest("product for creation dto object is null");
 
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                var product = await _services.ProductService.CreateProductAsync(userId, productForCreationDto);
+                var product = await _services.ProductService.CreateProductAsync(userId, productCreationDto);
 
-                return Ok();
+                return CreatedAtRoute("ProductById", new { id = product.Id }, product);
             }
 
             return BadRequest();
@@ -86,6 +86,20 @@ namespace Controllers
             }
 
             return BadRequest();
+        }
+
+        [Authorize]
+        [HttpDelete("{productId:int/photos/{photoId:int}}")]
+        public async Task<IActionResult> DeletePhoto(int productId, int photoId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Authorize]
+        [HttpPut("{productId:int}")]
+        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductForUpdateDto productUpdateDto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

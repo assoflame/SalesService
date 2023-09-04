@@ -19,21 +19,21 @@ namespace Controllers
 
         [HttpPost]
         [Route("signup")]
-        public async Task<IActionResult> SignUp([FromBody] UserForSignUpDto userForSignUpDto)
+        public async Task<IActionResult> SignUp([FromBody] UserForSignUpDto userSignUpDto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await _services.AuthService.SignUp(userForSignUpDto);
+            await _services.AuthService.SignUp(userSignUpDto);
 
             return Ok();
         }
 
         [HttpPost]
         [Route("signin")]
-        public async Task<IActionResult> SignIn([FromBody] UserForSignInDto userForSignInDto)
+        public async Task<IActionResult> SignIn([FromBody] UserForSignInDto userSignInDto)
         {
-            if (!await _services.AuthService.ValidateUser(userForSignInDto))
+            if (!await _services.AuthService.ValidateUser(userSignInDto))
                 return Unauthorized();
 
             return Ok(new { Token = await _services.AuthService.CreateToken(true) });
