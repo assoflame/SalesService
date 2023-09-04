@@ -21,9 +21,17 @@ namespace Web
                     opt => opt.MapFrom(
                         product => product
                             .Images
-                            .Select(image => Convert.ToBase64String(image.Image))
+                            .Select(image => Convert.ToBase64String(image.Data))
                             .ToArray())
                     );
+
+            CreateMap<Chat, ChatDto>();
+
+            CreateMap<Message, MessageDto>();
+
+            CreateMap<MessageCreationDto, Message>();
+
+            CreateMap<ProductImage, ProductImageDto>();
         }
     }
 }

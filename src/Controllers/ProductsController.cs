@@ -75,13 +75,36 @@ namespace Controllers
             return BadRequest();
         }
 
+        [HttpGet("{productId:int}/photos", Name = "ProductPhotos")]
+        public async Task<IActionResult> GetProductPhotos(int productId)
+        {
+            var photos = await _services.ProductService.GetProductPhotos(productId);
+
+            return Ok(photos);
+        }
+
         [Authorize]
         [HttpPost("{productId:int}")]
         public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                await _services.ProductService.AddPhotosAsync(userId, productId, files);
+                var photos = await _services.ProductService.AddPhotosAsync(userId, productId, files);
+
+                return CreatedAtRoute("ProductPhotos", new { productId = productId }, photos);
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpDelete("{productId:int}/photos")]
+        public async Task<IActionResult> DeleteProductPhotos(int productId)
+        {
+            if(int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                await _services.ProductService.DeleteProductPhotos(userId, productId);
+
                 return Ok();
             }
 
@@ -89,17 +112,34 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpDelete("{productId:int/photos/{photoId:int}}")]
-        public async Task<IActionResult> DeletePhoto(int productId, int photoId)
-        {
-            throw new NotImplementedException();
-        }
-
-        [Authorize]
         [HttpPut("{productId:int}")]
         public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductForUpdateDto productUpdateDto)
         {
-            throw new NotImplementedException();
+            if (productUpdateDto is null)
+                return BadRequest("product update dto object is null");
+
+            if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                await _services.ProductService.UpdateProductAsync(userId, productId, productUpdateDto);
+
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPatch("productId:int")]
+        public async Task<IActionResult> SellProduct(int productId)
+        {
+            if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                await _services.ProductService.SellProductAsync(userId, productId);
+
+                return NoContent();
+            }
+
+            return BadRequest();
         }
     }
 }

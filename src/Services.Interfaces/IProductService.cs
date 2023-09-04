@@ -18,7 +18,9 @@ namespace Services.Interfaces
         Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto,
             IFormFileCollection? images = null);
         Task<ProductDto> SellProductAsync(int userId, int productId);
-        Task<ProductDto> UpdateProductAsync(int userId, ProductForUpdateDto productForUpdateDto);
-        Task AddPhotosAsync(int userId, int productId, IFormFileCollection? images);
+        Task UpdateProductAsync(int userId, int productId, ProductForUpdateDto productForUpdateDto);
+        Task<IEnumerable<ProductImageDto>> AddPhotosAsync(int userId, int productId, IFormFileCollection? images);
+        Task<IEnumerable<ProductImageDto>> GetProductPhotos(int productId);
+        Task DeleteProductPhotos(int userId, int productId);
     }
 }

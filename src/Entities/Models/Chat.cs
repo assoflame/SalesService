@@ -3,12 +3,12 @@
     public class Chat
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int SellerId { get; set; }
+        public int FirstUserId { get; set; }
+        public int SecondUserId { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public User Customer { get; set; }
-        public User Seller { get; set; }
+        public User FirstUser { get; set; }
+        public User SecondUser { get; set; }
         public IEnumerable<Message> Messages { get; set; }
     }
 }

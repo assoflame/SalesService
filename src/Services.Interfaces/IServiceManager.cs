@@ -12,5 +12,6 @@ namespace Services.Interfaces
         IProductService ProductService { get; }
         IAuthService AuthService { get; }
         IAdminService AdminService { get; }
+        IChatService ChatService { get; }
     }
 }

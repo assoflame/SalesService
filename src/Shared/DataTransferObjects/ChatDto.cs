@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record ProductForUpdateDto(string Name, string Description, string City, decimal Price);
+    public record ChatDto(int FirstUserId, int SecondUserId, DateTime CreationDate, MessageDto[] messages);
 }

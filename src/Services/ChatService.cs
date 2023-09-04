@@ -3,6 +3,7 @@ using DataAccess.Interfaces;
 using Entities.Exceptions;
 using SalesService.Entities.Models;
 using Services.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,40 +24,58 @@ namespace Services
             _mapper = mapper;
             _logger = logger;
         }
-        
-        //public async Task<ChatDto> SendMessage(int userId, MessageForCreationDto messageDto)
-        //{
-        //    var seller = await _unitOfWork.Users.GetUserByIdAsync(messageDto.UserId);
 
-        //    if (seller is null)
-        //        throw new UserNotFoundException(messageDto.UserId);
+        public async Task<IEnumerable<ChatDto>> GetUserChats(int userId)
+        {
+            var chats = await _unitOfWork.Chats.GetUserChatsAsync(userId, trackChanges: false);
 
-        //    var chat = await _unitOfWork.Chats
-        //        .GetChatByUsersAsync(userId, messageDto.UserId, trackChanges: false);
+            var chatsDto = _mapper.Map<IEnumerable<ChatDto>>(chats);
 
-        //    if (chat is null)
-        //    {
-        //        chat = new Chat
-        //        {
-        //            CustomerId = userId,
-        //            SellerId = messageDto.UserId,
-        //            CreationDate = DateTime.UtcNow
-        //        };
-        //        _unitOfWork.Chats.Create(chat);
-        //        await _unitOfWork.SaveAsync();
+            return chatsDto;
+        }
 
-        //        chat = await _unitOfWork.Chats
-        //            .GetChatByUsersAsync(userId, messageDto.UserId, trackChanges: false);
-        //    }
+        public async Task<ChatDto> GetUserChat(int userId, int chatId)
+        {
+            var chat = await _unitOfWork.Chats.GetChatByIdAsync(chatId, trackChanges: false);
 
-        //    var message = _mapper.Map<Message>(messageDto);
-        //    message.ChatId = chat.Id;
-        //    message.UserId = userId;
-        //    message.CreationDate = DateTime.UtcNow;
+            if (chat is null || (chat.FirstUserId != userId && chat.SecondUserId != userId))
+                throw new ChatNotFoundException(chatId);
 
-        //    _unitOfWork.Messages.Create(message);
-        //    await _unitOfWork.SaveAsync();
+            return _mapper.Map<ChatDto>(chat);
+        }
 
-        //}
+        public async Task<ChatDto> SendMessage(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
+        {
+            var user = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
+
+            if (user is null)
+                throw new UserNotFoundException(userId);
+
+            var chat = await _unitOfWork.Chats
+                .GetChatByUsersAsync(userWhoSendsId, userId, trackChanges: false);
+
+            if (chat is null)
+            {
+                chat = new Chat
+                {
+                    FirstUserId = Math.Min(userWhoSendsId, userId),
+                    SecondUserId = Math.Max(userWhoSendsId, userId),
+                    CreationDate = DateTime.UtcNow
+                };
+
+                _unitOfWork.Chats.Create(chat);
+                await _unitOfWork.SaveAsync();
+            }
+
+            var message = _mapper.Map<Message>(messageCreationDto);
+            message.ChatId = chat.Id;
+            message.UserId = userWhoSendsId;
+            message.CreationDate = DateTime.UtcNow;
+
+            _unitOfWork.Messages.Create(message);
+            await _unitOfWork.SaveAsync();
+
+            return _mapper.Map<ChatDto>(chat);
+        }
     }
 }

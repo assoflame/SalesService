@@ -20,30 +20,30 @@ namespace DataAccess
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Chat>()
-                .HasOne<User>(c => c.Seller)
-                .WithMany(u => u.ChatsAsSeller)
-                .HasForeignKey(c => c.SellerId);
+                .HasOne<User>(c => c.SecondUser)
+                .WithMany(u => u.SecondChats)
+                .HasForeignKey(c => c.SecondUserId);
 
             modelBuilder.Entity<Chat>()
-                .HasOne<User>(c => c.Customer)
-                .WithMany(u => u.ChatsAsCustomer)
-                .HasForeignKey(c => c.CustomerId);
+                .HasOne<User>(c => c.FirstUser)
+                .WithMany(u => u.FirstChats)
+                .HasForeignKey(c => c.FirstUserId);
 
             modelBuilder.Entity<UserRating>()
-                .HasOne<User>(ur => ur.Seller)
+                .HasOne<User>(ur => ur.User)
                 .WithMany(u => u.RatingsAsSeller)
-                .HasForeignKey(ur => ur.SellerId);
+                .HasForeignKey(ur => ur.UserId);
 
             modelBuilder.Entity<UserRating>()
-                .HasOne<User>(ur => ur.Customer)
+                .HasOne<User>(ur => ur.UserWhoRated)
                 .WithMany(u => u.RatingsAsCustomer)
-                .HasForeignKey(ur => ur.CustomerId);
+                .HasForeignKey(ur => ur.UserWhoRatedId);
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
 
             modelBuilder.Entity<UserRating>()
-                .HasKey(userRating => new { userRating.CustomerId, userRating.SellerId });
+                .HasKey(userRating => new { userRating.UserWhoRatedId, userRating.UserId });
 
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
         }

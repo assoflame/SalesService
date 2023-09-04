@@ -90,21 +90,19 @@ namespace Services
             return _mapper.Map<ProductDto>(productEntity);
         }
 
-        public async Task<ProductDto> UpdateProductAsync(int userId, ProductForUpdateDto productForUpdateDto)
+        public async Task UpdateProductAsync(int userId, int productId, ProductForUpdateDto productForUpdateDto)
         {
             var product = await _unitOfWork.Products
-                .GetProductByIdAsync(productForUpdateDto.Id, trackChanges: true);
+                .GetProductByIdAsync(productId, trackChanges: true);
 
             if (product is null || userId != product.UserId)
-                throw new ProductNotFoundException(productForUpdateDto.Id);
+                throw new ProductNotFoundException(productId);
 
             var freshProduct = _mapper.Map<Product>(productForUpdateDto);
 
             _unitOfWork.Products.Update(freshProduct);
 
             await _unitOfWork.SaveAsync();
-
-            return _mapper.Map<ProductDto>(freshProduct);
         }
 
         public async Task<ProductDto> SellProductAsync(int userId, int productId)
@@ -124,34 +122,33 @@ namespace Services
             return _mapper.Map<ProductDto>(product);
         }
 
-        public async Task AddPhotosAsync(int userId, int productId, IFormFileCollection? images)
+        public async Task<IEnumerable<ProductImageDto>> AddPhotosAsync(int userId, int productId, IFormFileCollection? images)
         {
-            if (images is not null)
+            var product = await _unitOfWork
+                .Products
+                .GetProductByIdAsync(productId, trackChanges: false);
+
+            if (product is null || product.UserId != userId)
+                throw new ProductNotFoundException(productId);
+
+            int maxImagesCount = 10;
+
+            if (product.Images.Count() + images.Count() > maxImagesCount)
+                throw new TooManyImagesCountException(maxImagesCount);
+
+            var productImages = new List<ProductImage>();
+
+            foreach (var image in images)
             {
-                var product = await _unitOfWork
-                    .Products
-                    .GetProductByIdAsync(productId, trackChanges: false);
-
-                if (product is null || product.UserId != userId)
-                    throw new ProductNotFoundException(productId);
-
-                int maxImagesCount = 10;
-
-                if (product.Images.Count() + images.Count() > maxImagesCount)
-                    throw new TooManyImagesCountException(maxImagesCount);
-
-                var productImages = new List<ProductImage>();
-
-                foreach (var image in images)
-                {
-                    if (image is not null && image.Length > 0)
-                        productImages.Add(CreateProductImage(product, image));
-                }
-
-                _unitOfWork.ProductImages.CreateRange(productImages);
-
-                await _unitOfWork.SaveAsync();
+                if (image is not null && image.Length > 0)
+                    productImages.Add(CreateProductImage(product, image));
             }
+
+            _unitOfWork.ProductImages.CreateRange(productImages);
+
+            await _unitOfWork.SaveAsync();
+
+            return _mapper.Map<IEnumerable<ProductImageDto>>(productImages);
         }
 
         private ProductImage CreateProductImage(Product product, IFormFile image)
@@ -160,10 +157,37 @@ namespace Services
 
             using (var binaryReader = new BinaryReader(image.OpenReadStream()))
             {
-                productImage.Image = binaryReader.ReadBytes((int)image.Length);
+                productImage.Data = binaryReader.ReadBytes((int)image.Length);
             }
 
             return productImage;
+        }
+
+        public async Task<IEnumerable<ProductImageDto>> GetProductPhotos(int productId)
+        {
+            var photos = await _unitOfWork
+                .ProductImages
+                .GetProductPhotos(productId, trackChanges: false);
+
+            return _mapper.Map<IEnumerable<ProductImageDto>>(photos);
+        }
+
+        public async Task DeleteProductPhotos(int userId, int productId)
+        {
+            var product = await _unitOfWork
+                .Products
+                .GetProductByIdAsync(productId, trackChanges: false);
+
+            if (product.UserId != userId)
+                throw new ProductNotFoundException(productId);
+
+            var photos = await _unitOfWork
+                .ProductImages
+                .GetProductPhotos(productId, trackChanges: true);
+
+            _unitOfWork.ProductImages.DeleteRange(photos);
+
+            await _unitOfWork.SaveAsync();
         }
     }
 }

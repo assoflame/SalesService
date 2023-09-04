@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,16 @@ namespace DataAccess
 
         public void CreateRange(IEnumerable<ProductImage> productImages)
             => DbContext.AddRange(productImages);
+
+        public async Task<IEnumerable<ProductImage>> GetProductPhotos(int productId, bool trackChanges)
+        {
+            var photos = await FindByCondition(photo => photo.ProductId == productId, trackChanges)
+                .ToListAsync();
+
+            return photos;
+        }
+
+        public void DeleteRange(IEnumerable<ProductImage> productImages)
+            => DbContext.RemoveRange(productImages);
     }
 }

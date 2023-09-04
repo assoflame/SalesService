@@ -21,8 +21,8 @@
         public IEnumerable<UserRating> RatingsAsCustomer { get; set; }
         public IEnumerable<UserRating> RatingsAsSeller { get; set; }
         public IEnumerable<UserRole> Roles { get; set; }
-        public IEnumerable<Chat> ChatsAsCustomer { get; set; }
-        public IEnumerable<Chat> ChatsAsSeller { get; set; }
+        public IEnumerable<Chat> FirstChats { get; set; }
+        public IEnumerable<Chat> SecondChats { get; set; }
     }
 
     public enum UserStatus

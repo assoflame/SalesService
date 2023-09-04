@@ -43,17 +43,29 @@ namespace Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task RateUser(int customerId, int sellerId, RateDto rateDto)
+        public async Task<(IEnumerable<RatingDto> ratingsDto, MetaData metaData)>
+            GetUserRatings(int userId, RatingParameters ratingParams)
         {
-            var seller = await _unitOfWork.Users.GetUserByIdAsync(sellerId, trackChanges: false);
+            var ratings = await _unitOfWork
+                .UserRatings
+                .GetUserRatings(userId, ratingParams, trackChanges: false);
+
+            var ratingsDto = _mapper.Map<IEnumerable<RatingDto>>(ratings);
+
+            return (ratingsDto: ratingsDto, metaData: ratings.MetaData);
+        }
+
+        public async Task RateUser(int userWhoRateId, int userId, RateDto rateDto)
+        {
+            var seller = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
 
             if (seller is null)
-                throw new UserNotFoundException(sellerId);
+                throw new UserNotFoundException(userId);
 
             var rating = new UserRating
             {
-                CustomerId = customerId,
-                SellerId = sellerId,
+                UserWhoRatedId = userWhoRateId,
+                UserId = userId,
                 StarsCount = rateDto.StarsCount,
                 Comment = rateDto.Comment
             };
