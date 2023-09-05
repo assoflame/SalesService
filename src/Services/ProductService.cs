@@ -141,7 +141,7 @@ namespace Services
             foreach (var image in images)
             {
                 if (image is not null && image.Length > 0)
-                    productImages.Add(CreateProductImage(product, image));
+                    productImages.Add(await CreateProductImage(product, image));
             }
 
             _unitOfWork.ProductImages.CreateRange(productImages);
@@ -151,14 +151,34 @@ namespace Services
             return _mapper.Map<IEnumerable<ProductImageDto>>(productImages);
         }
 
-        private ProductImage CreateProductImage(Product product, IFormFile image)
+        private async Task<ProductImage> CreateProductImage(Product product, IFormFile image)
         {
-            var productImage = new ProductImage { ProductId = product.Id };
+            var directoryPath = $@"{Directory.GetParent(Directory.GetCurrentDirectory())?.Parent.FullName}\images\{product.Id}";
 
-            using (var binaryReader = new BinaryReader(image.OpenReadStream()))
+            if(!Directory.Exists(directoryPath))
             {
-                productImage.Data = binaryReader.ReadBytes((int)image.Length);
+                Directory.CreateDirectory(directoryPath);
             }
+
+            var imageNumber = Directory.GetFiles(directoryPath).Count() == 0
+                ? 1
+                : int.Parse(Directory.GetFiles(directoryPath)
+                            .Select(file => file.Split('\\')
+                            .Last())
+                            ?.Max()) + 1;
+
+            var imagePath = String.Join("\\", directoryPath, imageNumber);
+
+            using(var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await image.CopyToAsync(fileStream);
+            }
+
+            var productImage = new ProductImage
+            {
+                ProductId = product.Id,
+                Path = imagePath
+            };
 
             return productImage;
         }
@@ -178,12 +198,15 @@ namespace Services
                 .Products
                 .GetProductByIdAsync(productId, trackChanges: false);
 
-            if (product.UserId != userId)
+            if (product is null || product.UserId != userId)
                 throw new ProductNotFoundException(productId);
 
             var photos = await _unitOfWork
                 .ProductImages
                 .GetProductPhotos(productId, trackChanges: true);
+
+            foreach (var photo in photos)
+                File.Delete(photo.Path);
 
             _unitOfWork.ProductImages.DeleteRange(photos);
 

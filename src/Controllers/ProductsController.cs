@@ -84,7 +84,7 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpPost("{productId:int}")]
+        [HttpPost("{productId:int}/photos")]
         public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))

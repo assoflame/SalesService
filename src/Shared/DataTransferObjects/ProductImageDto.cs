@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record ProductImageDto(int Id, int ProductId);
+    public record ProductImageDto(int Id, int ProductId, string Path);
 }

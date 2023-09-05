@@ -17,13 +17,14 @@ namespace Web
             CreateMap<ProductForCreationDto, Product>();
 
             CreateMap<Product, ProductDto>()
-                .ForCtorParam(nameof(ProductDto.Images),
-                    opt => opt.MapFrom(
-                        product => product
-                            .Images
-                            .Select(image => Convert.ToBase64String(image.Data))
-                            .ToArray())
-                    );
+                .ForCtorParam(nameof(ProductDto.ImagePaths),
+                opt => opt.MapFrom(
+                    product => product
+                        .Images
+                        .Select(img => img.Path)
+                        .ToArray()
+                        )
+                );
 
             CreateMap<Chat, ChatDto>();
 
