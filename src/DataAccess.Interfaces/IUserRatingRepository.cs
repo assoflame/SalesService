@@ -12,6 +12,6 @@ namespace DataAccess.Interfaces
     {
         void Create(UserRating rating);
 
-        Task<PagedList<UserRating>> GetUserRatings(int userId, RatingParameters ratingParams, bool trackChanges);
+        Task<PagedList<UserRating>> GetUserRatingsAsync(int userId, RatingParameters ratingParams, bool trackChanges);
     }
 }

@@ -12,9 +12,9 @@ namespace Web
                 .ForCtorParam(nameof(UserDto.FullName),
                 opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)));
 
-            CreateMap<UserForSignUpDto, User>();
+            CreateMap<SignUpDto, User>();
 
-            CreateMap<ProductForCreationDto, Product>();
+            CreateMap<ProductCreationDto, Product>();
 
             CreateMap<Product, ProductDto>()
                 .ForCtorParam(nameof(ProductDto.ImagePaths),

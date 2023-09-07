@@ -14,7 +14,7 @@ namespace DataAccess
     {
         public UserRatingRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<PagedList<UserRating>> GetUserRatings(int userId, RatingParameters ratingParams, bool trackChanges)
+        public async Task<PagedList<UserRating>> GetUserRatingsAsync(int userId, RatingParameters ratingParams, bool trackChanges)
         {
             var userRatings = await FindByCondition(userRating => userRating.UserId == userId, trackChanges)
                 .OrderByDescending(userRating => userRating.CreationDate)

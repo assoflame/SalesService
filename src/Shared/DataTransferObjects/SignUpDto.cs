@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record UserForSignUpDto
+    public record SignUpDto
     {
         [Required]
         [EmailAddress]

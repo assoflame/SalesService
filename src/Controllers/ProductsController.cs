@@ -60,7 +60,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productCreationDto)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductCreationDto productCreationDto)
         {
             if (productCreationDto is null)
                 return BadRequest("product for creation dto object is null");
@@ -78,7 +78,7 @@ namespace Controllers
         [HttpGet("{productId:int}/photos", Name = "ProductPhotos")]
         public async Task<IActionResult> GetProductPhotos(int productId)
         {
-            var photos = await _services.ProductService.GetProductPhotos(productId);
+            var photos = await _services.ProductService.GetProductPhotosAsync(productId);
 
             return Ok(photos);
         }
@@ -87,6 +87,9 @@ namespace Controllers
         [HttpPost("{productId:int}/photos")]
         public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
         {
+            if (files.Count == 0)
+                return Ok();
+
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
                 var photos = await _services.ProductService.AddPhotosAsync(userId, productId, files);
@@ -103,7 +106,7 @@ namespace Controllers
         {
             if(int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                await _services.ProductService.DeleteProductPhotos(userId, productId);
+                await _services.ProductService.DeleteProductPhotosAsync(userId, productId);
 
                 return Ok();
             }
@@ -113,7 +116,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPut("{productId:int}")]
-        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductForUpdateDto productUpdateDto)
+        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductUpdateDto productUpdateDto)
         {
             if (productUpdateDto is null)
                 return BadRequest("product update dto object is null");

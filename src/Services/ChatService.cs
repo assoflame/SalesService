@@ -25,7 +25,7 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ChatDto>> GetUserChats(int userId)
+        public async Task<IEnumerable<ChatDto>> GetUserChatsAsync(int userId)
         {
             var chats = await _unitOfWork.Chats.GetUserChatsAsync(userId, trackChanges: false);
 
@@ -34,7 +34,7 @@ namespace Services
             return chatsDto;
         }
 
-        public async Task<ChatDto> GetUserChat(int userId, int chatId)
+        public async Task<ChatDto> GetUserChatAsync(int userId, int chatId)
         {
             var chat = await _unitOfWork.Chats.GetChatByIdAsync(chatId, trackChanges: false);
 
@@ -44,7 +44,7 @@ namespace Services
             return _mapper.Map<ChatDto>(chat);
         }
 
-        public async Task<ChatDto> SendMessage(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
+        public async Task<ChatDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
         {
             var user = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
 

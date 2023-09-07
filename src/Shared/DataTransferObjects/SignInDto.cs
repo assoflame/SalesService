@@ -6,5 +6,9 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record ProductForUpdateDto(string Name, string Description, string City, decimal Price);
+    public class SignInDto
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }

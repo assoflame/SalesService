@@ -16,7 +16,7 @@ namespace DataAccess
         public void CreateRange(IEnumerable<ProductImage> productImages)
             => DbContext.AddRange(productImages);
 
-        public async Task<IEnumerable<ProductImage>> GetProductPhotos(int productId, bool trackChanges)
+        public async Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId, bool trackChanges)
         {
             var photos = await FindByCondition(photo => photo.ProductId == productId, trackChanges)
                 .ToListAsync();

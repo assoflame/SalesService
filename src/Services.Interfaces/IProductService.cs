@@ -15,12 +15,12 @@ namespace Services.Interfaces
         Task<ProductDto> GetProductByIdAsync(int id);
         Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters);
         Task DeleteProductAsync(int productId);
-        Task<ProductDto> CreateProductAsync(int userId, ProductForCreationDto productForCreationDto,
+        Task<ProductDto> CreateProductAsync(int userId, ProductCreationDto productForCreationDto,
             IFormFileCollection? images = null);
         Task<ProductDto> SellProductAsync(int userId, int productId);
-        Task UpdateProductAsync(int userId, int productId, ProductForUpdateDto productForUpdateDto);
+        Task UpdateProductAsync(int userId, int productId, ProductUpdateDto productForUpdateDto);
         Task<IEnumerable<ProductImageDto>> AddPhotosAsync(int userId, int productId, IFormFileCollection? images);
-        Task<IEnumerable<ProductImageDto>> GetProductPhotos(int productId);
-        Task DeleteProductPhotos(int userId, int productId);
+        Task<IEnumerable<ProductImageDto>> GetProductPhotosAsync(int productId);
+        Task DeleteProductPhotosAsync(int userId, int productId);
     }
 }

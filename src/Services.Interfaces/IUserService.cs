@@ -7,7 +7,7 @@ namespace Services.Interfaces
     {
         Task<(IEnumerable<UserDto> users, MetaData metaData)> GetAllUsersAsync(UserParameters userParams);
         Task<UserDto> GetUserByIdAsync(int id);
-        Task RateUser(int userWhoRateId, int userId, RateDto rateDto);
-        Task<(IEnumerable<RatingDto> ratingsDto, MetaData metaData)> GetUserRatings(int userId, RatingParameters ratingParams);
+        Task RateUserAsync(int userWhoRateId, int userId, RatingCreationDto rateDto);
+        Task<(IEnumerable<RatingDto> ratingsDto, MetaData metaData)> GetUserRatingsAsync(int userId, RatingParameters ratingParams);
     }
 }

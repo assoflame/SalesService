@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record RateDto(int StarsCount, string? Comment);
+    public record ProductCreationDto(string Name, string Description, string City, decimal Price);
 }

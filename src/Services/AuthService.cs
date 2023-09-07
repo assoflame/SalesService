@@ -31,7 +31,7 @@ namespace Services
             _configuration = configuration;
         }
 
-        public async Task SignUp(UserForSignUpDto userForSignUpDto)
+        public async Task SignUpAsync(SignUpDto userForSignUpDto)
         {
             var user = _mapper.Map<User>(userForSignUpDto);
 
@@ -52,14 +52,14 @@ namespace Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<bool> ValidateUser(UserForSignInDto userForSignInDto)
+        public async Task<bool> ValidateUserAsync(SignInDto userForSignInDto)
         {
             _user = await _unitOfWork.Users
                 .GetUserByEmailAsync(userForSignInDto.Email, trackChanges: false);
 
             if (_user == null)
             {
-                _logger.LogError($"{nameof(ValidateUser)}: Authentication failed. Wrong email");
+                _logger.LogError($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong email");
                 return false;
             }
 
@@ -68,7 +68,7 @@ namespace Services
 
             if (passwordHash != _user.PasswordHash)
             {
-                _logger.LogError($"{nameof(ValidateUser)}: Authentication failed. Wrong password");
+                _logger.LogError($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong password");
                 return false;
             }
             return true;
@@ -120,7 +120,7 @@ namespace Services
             return principal;
         }
 
-        public async Task<TokenDto> CreateToken(bool populateExp)
+        public async Task<TokenDto> CreateTokenAsync(bool populateExp)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = GetClaims();
@@ -176,7 +176,7 @@ namespace Services
             return tokenOptions;
         }
 
-        public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
+        public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
 
@@ -191,7 +191,7 @@ namespace Services
             }
 
             _user = user;
-            return await CreateToken(populateExp: false);
+            return await CreateTokenAsync(populateExp: false);
         }
     }
 }

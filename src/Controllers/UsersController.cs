@@ -23,7 +23,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("{userId:int}/ratings")]
-        public async Task<IActionResult> RateUser(int userId, [FromBody] RateDto rateDto)
+        public async Task<IActionResult> RateUser(int userId, [FromBody] RatingCreationDto rateDto)
         {
             if (rateDto is null)
                 return BadRequest("rate dto object is null");
@@ -31,7 +31,7 @@ namespace Controllers
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userWhoRateId) &&
                 userId != userWhoRateId)
             {
-                await _services.UserService.RateUser(userWhoRateId, userId, rateDto);
+                await _services.UserService.RateUserAsync(userWhoRateId, userId, rateDto);
 
                 return Ok();
             }
@@ -45,7 +45,7 @@ namespace Controllers
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userWhoSendsId))
             {
-                var chat = await _services.ChatService.SendMessage(userWhoSendsId, userId, messageCreationDto);
+                var chat = await _services.ChatService.SendMessageAsync(userWhoSendsId, userId, messageCreationDto);
 
                 return Ok(chat);
             }
@@ -59,7 +59,7 @@ namespace Controllers
         {
             if(int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                var chatsDto = await _services.ChatService.GetUserChats(userId);
+                var chatsDto = await _services.ChatService.GetUserChatsAsync(userId);
 
                 return Ok(chatsDto);
             }
@@ -73,7 +73,7 @@ namespace Controllers
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                var chat = await _services.ChatService.GetUserChat(userId, chatId);
+                var chat = await _services.ChatService.GetUserChatAsync(userId, chatId);
 
                 return Ok(chat);
             }
@@ -86,7 +86,7 @@ namespace Controllers
         {
             var ratingsWithMetaData = await _services
                 .UserService
-                .GetUserRatings(userId, ratingParams);
+                .GetUserRatingsAsync(userId, ratingParams);
 
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(ratingsWithMetaData.metaData));

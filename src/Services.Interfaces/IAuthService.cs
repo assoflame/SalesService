@@ -9,9 +9,9 @@ namespace Services.Interfaces
 {
     public interface IAuthService
     {
-        Task SignUp(UserForSignUpDto userForSignUpDto);
-        Task<bool> ValidateUser(UserForSignInDto userForSignInDto);
-        Task<TokenDto> CreateToken(bool populateExp);
-        Task<TokenDto> RefreshToken(TokenDto tokenDto);
+        Task SignUpAsync(SignUpDto userForSignUpDto);
+        Task<bool> ValidateUserAsync(SignInDto userForSignInDto);
+        Task<TokenDto> CreateTokenAsync(bool populateExp);
+        Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto);
     }
 }

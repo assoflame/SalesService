@@ -44,18 +44,18 @@ namespace Services
         }
 
         public async Task<(IEnumerable<RatingDto> ratingsDto, MetaData metaData)>
-            GetUserRatings(int userId, RatingParameters ratingParams)
+            GetUserRatingsAsync(int userId, RatingParameters ratingParams)
         {
             var ratings = await _unitOfWork
                 .UserRatings
-                .GetUserRatings(userId, ratingParams, trackChanges: false);
+                .GetUserRatingsAsync(userId, ratingParams, trackChanges: false);
 
             var ratingsDto = _mapper.Map<IEnumerable<RatingDto>>(ratings);
 
             return (ratingsDto: ratingsDto, metaData: ratings.MetaData);
         }
 
-        public async Task RateUser(int userWhoRateId, int userId, RateDto rateDto)
+        public async Task RateUserAsync(int userWhoRateId, int userId, RatingCreationDto rateDto)
         {
             var seller = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
 
