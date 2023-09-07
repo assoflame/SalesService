@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
+using Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("{productId:int}/photos")]
-        public async Task<IActionResult> UploadPhotos(int productId, IFormFileCollection files)
+        public async Task<IActionResult> UploadPhotos(int productId, [ImageValidation] IFormFileCollection files)
         {
             if (files.Count == 0)
                 return Ok();
