@@ -17,8 +17,7 @@ namespace Controllers
             _services = services;
         }
 
-        [HttpPost]
-        [Route("signup")]
+        [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUpDto userSignUpDto)
         {
             if(!ModelState.IsValid)
@@ -29,8 +28,7 @@ namespace Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Route("signin")]
+        [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto userSignInDto)
         {
             if (!await _services.AuthService.ValidateUserAsync(userSignInDto))
@@ -39,8 +37,7 @@ namespace Controllers
             return Ok(new { Token = await _services.AuthService.CreateTokenAsync(true) });
         }
 
-        [HttpPost]
-        [Route("refresh")]
+        [HttpPost("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
         {
             return Ok(await _services.AuthService.RefreshTokenAsync(tokenDto));

@@ -40,7 +40,7 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpPost("messages/{userId:int}")]
+        [HttpPost("{userId:int}/messages")]
         public async Task<IActionResult> SendMessage(int userId, [FromBody] MessageCreationDto messageCreationDto)
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userWhoSendsId))

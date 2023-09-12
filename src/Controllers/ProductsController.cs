@@ -45,8 +45,7 @@ namespace Controllers
             return Ok(product);
         }
 
-        [HttpGet]
-        [Route("/api/users/{userId:int}/products")]
+        [HttpGet("/api/users/{userId:int}/products")]
         public async Task<IActionResult> GetUserProducts(int userId, [FromQuery] ProductParameters productParams)
         {
             var userProducts = await _services
@@ -86,14 +85,14 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("{productId:int}/photos")]
-        public async Task<IActionResult> UploadPhotos(int productId, [ImageValidation] IFormFileCollection files)
+        public async Task<IActionResult> UploadPhotos(int productId, [ImageValidation] IFormFileCollection images)
         {
-            if (files.Count == 0)
+            if (images.Count == 0)
                 return Ok();
 
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                var photos = await _services.ProductService.AddPhotosAsync(userId, productId, files);
+                var photos = await _services.ProductService.AddPhotosAsync(userId, productId, images);
 
                 return CreatedAtRoute("ProductPhotos", new { productId = productId }, photos);
             }

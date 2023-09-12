@@ -23,8 +23,7 @@ namespace Controllers
             _services = services;
         }
 
-        [HttpGet]
-        [Route("users")]
+        [HttpGet("users")]
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParams)
         {
             var usersWithMetaData = await _services.UserService.GetAllUsersAsync(userParams);
@@ -35,8 +34,7 @@ namespace Controllers
             return Ok(usersWithMetaData.users);
         }
 
-        [HttpPatch]
-        [Route("users/{userId:int}")]
+        [HttpPatch("users/{userId:int}")]
         public async Task<IActionResult> BlockUser(int userId)
         {
             await _services.AdminService.BlockUser(userId);
@@ -44,8 +42,7 @@ namespace Controllers
             return NoContent();
         }
 
-        [HttpDelete]
-        [Route("products/{productId:int}")]
+        [HttpDelete("products/{productId:int}")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
             await _services.ProductService.DeleteProductAsync(productId);
