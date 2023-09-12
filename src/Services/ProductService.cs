@@ -30,6 +30,9 @@ namespace Services
         public async Task<(IEnumerable<ProductDto> products, MetaData metaData)>
             GetAllProductsAsync(ProductParameters productParameters)
         {
+            if (!productParameters.ValidPriceRange)
+                throw new InvalidPriceRangeException();
+
             var productsWithMetaData = await _unitOfWork
                 .Products
                 .GetAllProductsAsync(productParameters, trackChanges: false);
@@ -51,6 +54,9 @@ namespace Services
 
         public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters)
         {
+            if(!productParameters.ValidPriceRange)
+                throw new InvalidPriceRangeException();
+
             var userProductsWithMetaData = await _unitOfWork
                 .Products
                 .GetUserProductsAsync(userId, productParameters, trackChanges: false);
@@ -153,7 +159,7 @@ namespace Services
 
         private async Task<ProductImage> CreateProductImage(Product product, IFormFile image)
         {
-            var directoryPath = $@"{Directory.GetParent(Directory.GetCurrentDirectory())?.Parent.FullName}\images\{product.Id}";
+            var directoryPath = $@"{Directory.GetCurrentDirectory()}\images\{product.Id}";
 
             if(!Directory.Exists(directoryPath))
             {
@@ -162,10 +168,12 @@ namespace Services
 
             int.TryParse(Directory.GetFiles(directoryPath)
                             .Select(file => file.Split('\\')
-                            .Last())
+                            .Last().Split('.').First())
                             .Max(), out var imageNumber);
 
-            var imagePath = String.Join("\\", directoryPath, imageNumber + "." + image.FileName.Split('.').Last()); // add file extension in fileName
+            ++imageNumber;
+
+            var imagePath = String.Join("\\", directoryPath, string.Concat(imageNumber, Path.GetExtension(image.FileName)));
 
             using(var fileStream = new FileStream(imagePath, FileMode.Create))
             {

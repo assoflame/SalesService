@@ -13,6 +13,8 @@ namespace Shared.RequestFeatures
 
         private int _pageSize = 10;
 
+        public string? SearchString { get; set; }
+
         public int PageSize
         {
             get => _pageSize;

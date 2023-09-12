@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using DataAccess.Extensions;
+using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
 using Shared.RequestFeatures;
@@ -18,12 +19,16 @@ namespace DataAccess
             ProductParameters productParameters, bool trackChanges)
         {
             var products = await FindAll(trackChanges)
+                .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
+                .Search(productParameters.SearchString)
                 .Include(product => product.Images)
                 .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
                 .Take(productParameters.PageSize)
                 .ToListAsync();
 
             var count = await FindAll(trackChanges: false)
+                .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
+                .Search(productParameters.SearchString)
                 .CountAsync();
 
             return new PagedList<Product>
@@ -41,12 +46,16 @@ namespace DataAccess
             bool trackChanges)
         {
             var userProducts = await FindByCondition(product => product.UserId == userId, trackChanges)
+                .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
+                .Search(productParameters.SearchString)
                 .Include(product => product.Images)
                 .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
                 .Take(productParameters.PageSize)
                 .ToListAsync();
 
             var count = await FindByCondition(product => product.UserId == userId, trackChanges: false)
+                .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
+                .Search(productParameters.SearchString)
                 .CountAsync();
 
             return new PagedList<Product>(userProducts, count, productParameters.PageNumber, productParameters.PageSize);
