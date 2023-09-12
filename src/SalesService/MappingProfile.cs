@@ -33,6 +33,8 @@ namespace Web
             CreateMap<MessageCreationDto, Message>();
 
             CreateMap<ProductImage, ProductImageDto>();
+
+            CreateMap<UserRating, RatingDto>();
         }
     }
 }

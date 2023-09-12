@@ -37,9 +37,15 @@ namespace Controllers
         [HttpPatch("users/{userId:int}")]
         public async Task<IActionResult> BlockUser(int userId)
         {
-            await _services.AdminService.BlockUser(userId);
+            if (int.TryParse(HttpContext?.User?.FindFirst("Id")?.Value, out var adminId)
+                && adminId != userId)
+            {
+                await _services.AdminService.BlockUser(userId);
 
-            return NoContent();
+                return NoContent();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("products/{productId:int}")]

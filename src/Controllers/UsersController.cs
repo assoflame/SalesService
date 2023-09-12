@@ -45,9 +45,9 @@ namespace Controllers
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userWhoSendsId))
             {
-                var chat = await _services.ChatService.SendMessageAsync(userWhoSendsId, userId, messageCreationDto);
+                var message = await _services.ChatService.SendMessageAsync(userWhoSendsId, userId, messageCreationDto);
 
-                return Ok(chat);
+                return Ok(message);
             }
 
             return BadRequest();

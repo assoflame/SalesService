@@ -69,7 +69,7 @@ namespace Controllers
             {
                 var product = await _services.ProductService.CreateProductAsync(userId, productCreationDto);
 
-                return CreatedAtRoute("ProductById", new { id = product.Id }, product);
+                return CreatedAtRoute("ProductById", new { productId = product.Id }, product);
             }
 
             return BadRequest();
@@ -132,7 +132,7 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpPatch("productId:int")]
+        [HttpPatch("{productId:int}")]
         public async Task<IActionResult> SellProduct(int productId)
         {
             if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))

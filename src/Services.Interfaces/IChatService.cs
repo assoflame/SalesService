@@ -11,6 +11,6 @@ namespace Services.Interfaces
     {
         Task<IEnumerable<ChatDto>> GetUserChatsAsync(int userId);
         Task<ChatDto> GetUserChatAsync(int userId, int chatId);
-        Task<ChatDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto);
+        Task<MessageDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto);
     }
 }

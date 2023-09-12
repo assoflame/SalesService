@@ -8,7 +8,6 @@
         public string LastName { get; set; }
         public int Age { get; set; }
         public string City { get; set; }
-        public byte[]? Avatar { get; set; }
         public UserStatus Status { get; set; }
 
         public string PasswordHash { get; set; }

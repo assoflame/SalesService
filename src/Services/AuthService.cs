@@ -180,11 +180,13 @@ namespace Services
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
 
+            var userEmail = principal?.FindFirst(ClaimTypes.Email)?.Value;
+
             var user = await _unitOfWork.Users
-                .GetUserByEmailAsync(principal.Identity.Name, trackChanges: true);
+                .GetUserByEmailAsync(userEmail, trackChanges: true);
 
             if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
-                   user.RefreshTokenExpiryTime > DateTime.Now)
+                   user.RefreshTokenExpiryTime < DateTime.Now)
             {
                 //throw new RefreshTokenBadRequest();
                 throw new ArgumentException();

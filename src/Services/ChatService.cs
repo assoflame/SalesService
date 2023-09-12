@@ -44,7 +44,7 @@ namespace Services
             return _mapper.Map<ChatDto>(chat);
         }
 
-        public async Task<ChatDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
+        public async Task<MessageDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
         {
             var user = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
 
@@ -75,7 +75,7 @@ namespace Services
             _unitOfWork.Messages.Create(message);
             await _unitOfWork.SaveAsync();
 
-            return _mapper.Map<ChatDto>(chat);
+            return _mapper.Map<MessageDto>(message);
         }
     }
 }

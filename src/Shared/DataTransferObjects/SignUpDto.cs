@@ -14,7 +14,7 @@ namespace Shared.DataTransferObjects
         public string Email { get; init; }
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$",
             ErrorMessage = "Длина пароля должна быть хотя бы 8 символов." +
             "Пароль должен содержать хотя бы одну большую букву, маленькую букву, цифру и специальный символ.")]
         public string Password { get; set; }

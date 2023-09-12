@@ -91,7 +91,8 @@ namespace Services
 
             await _unitOfWork.SaveAsync();
 
-            await AddPhotosAsync(userId, productEntity.Id, images);
+            if(images is not null)
+                await AddPhotosAsync(userId, productEntity.Id, images);
 
             return _mapper.Map<ProductDto>(productEntity);
         }
@@ -104,9 +105,11 @@ namespace Services
             if (product is null || userId != product.UserId)
                 throw new ProductNotFoundException(productId);
 
-            var freshProduct = _mapper.Map<Product>(productForUpdateDto);
+            product.Price = productForUpdateDto.Price;
+            product.Name = productForUpdateDto.Name;
+            product.Description = productForUpdateDto.Description;
 
-            _unitOfWork.Products.Update(freshProduct);
+            _unitOfWork.Products.Update(product);
 
             await _unitOfWork.SaveAsync();
         }
