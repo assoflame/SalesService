@@ -23,6 +23,8 @@ namespace SalesService.Extensions
                         {
                             NotFoundException => StatusCodes.Status404NotFound,
                             TooManyImagesCountException => StatusCodes.Status400BadRequest,
+                            InvalidPriceRangeException => StatusCodes.Status400BadRequest,
+
                             _ => StatusCodes.Status500InternalServerError
                         };
 
