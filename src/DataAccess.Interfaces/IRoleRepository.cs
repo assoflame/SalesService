@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IRoleRepository
+    public interface IRoleRepository : IGenericRepository<Role>
     {
         Task<Role> GetByNameAsync(string name, bool trackChanges);
     }

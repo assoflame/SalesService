@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IProductImageRepository
+    public interface IProductImageRepository : IGenericRepository<ProductImage>
     {
-        void Create(ProductImage productImage);
         void CreateRange(IEnumerable<ProductImage> productImages);
-        void Delete(ProductImage productImage);
         void DeleteRange(IEnumerable<ProductImage> productImage);
         Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId, bool trackChanges);
     }

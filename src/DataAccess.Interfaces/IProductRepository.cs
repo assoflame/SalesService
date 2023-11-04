@@ -8,15 +8,12 @@ using Shared.RequestFeatures;
 
 namespace DataAccess.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepository : IGenericRepository<Product>
     {
         Task<PagedList<Product>> GetAllProductsAsync(ProductParameters productParameters, bool trackChanges);
         Task<Product?> GetProductByIdAsync(int id, bool trackChanges);
         Task<PagedList<Product>> GetUserProductsAsync(
             int userId, ProductParameters productParameters, bool trackChanges);
         Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges);
-        void Delete(Product product);
-        void Create(Product product);
-        void Update(Product product);
     }
 }

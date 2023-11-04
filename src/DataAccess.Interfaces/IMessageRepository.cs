@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IMessageRepository
+    public interface IMessageRepository : IGenericRepository<Message>
     {
-        void Create(Message message);
     }
 }

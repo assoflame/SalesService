@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IUserRoleRepository
+    public interface IUserRoleRepository : IGenericRepository<UserRole>
     {
-        void Create(UserRole userRole);
     }
 }

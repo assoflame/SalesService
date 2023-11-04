@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IChatRepository
+    public interface IChatRepository : IGenericRepository<Chat>
     {
         Task<IEnumerable<Chat>> GetUserChatsAsync(int userId, bool trackChanges);
         Task<Chat?> GetChatByIdAsync(int chatId, bool trackChanges);
         Task<Chat?> GetChatByUsersAsync(int sellerId, int customerId, bool trackChanges);
-        void Create(Chat chat);
     }
 }
