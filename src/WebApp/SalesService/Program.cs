@@ -42,6 +42,8 @@ app.ConfigureExceptionHandler(logger);
 
 // app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseMiddleware<CheckUserStatusMiddleware>();
 app.UseAuthorization();
