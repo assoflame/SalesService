@@ -22,6 +22,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Controllers.AssemblyReference).Assembly);
 
+builder.Services.ConfigureCors();
+
 builder.Services.AddSwaggerGen();
 
 
@@ -33,6 +35,8 @@ var logger = app.Services.GetService<ILoggerManager>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors();
 
 app.ConfigureExceptionHandler(logger);
 
