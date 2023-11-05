@@ -22,12 +22,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Controllers.AssemblyReference).Assembly);
 
+builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 var logger = app.Services.GetService<ILoggerManager>();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.ConfigureExceptionHandler(logger);
 
