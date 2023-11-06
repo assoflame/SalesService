@@ -10,7 +10,9 @@ namespace Web
         {
             CreateMap<User, UserDto>()
                 .ForCtorParam(nameof(UserDto.FullName),
-                opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)));
+                opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)))
+                .ForCtorParam(nameof(UserDto.Ratings),
+                opt => opt.MapFrom(u => u.RatingsAsSeller.ToArray()));
 
             CreateMap<SignUpDto, User>();
 
