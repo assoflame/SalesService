@@ -22,12 +22,12 @@ const SignUpForm = () => {
             });
         }}>
             <div className="authInputs">
-                <input placeholder='Email' onChange={(e) => setEmail(e.target.value)}/>
-                <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
-                <input placeholder='First Name' onChange={(e) => setFirstName(e.target.value)}/>
-                <input placeholder='Last Name' onChange={(e) => setLastName(e.target.value)}/>
-                <input placeholder='City' onChange={(e) => setCity(e.target.value)}/>
-                <input placeholder='Age' onChange={(e) => setAge(e.target.value)}/>
+                <input name="Email" placeholder='Email' onChange={(e) => setEmail(e.target.value)}/>
+                <input name="Password" type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
+                <input name="FirstName" placeholder='First Name' onChange={(e) => setFirstName(e.target.value)}/>
+                <input name="LastName" placeholder='Last Name' onChange={(e) => setLastName(e.target.value)}/>
+                <input name="City" placeholder='City' onChange={(e) => setCity(e.target.value)}/>
+                <input name="Age" placeholder='Age' onChange={(e) => setAge(e.target.value)}/>
             </div>
             <div className="authButton">
                 <button type="submit">Sign Up</button>

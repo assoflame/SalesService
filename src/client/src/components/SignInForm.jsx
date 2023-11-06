@@ -12,8 +12,8 @@ const SignInForm = () => {
             await signIn({email, password});
         }}>
             <div className="authInputs">
-                <input placeholder='Email' onChange={(e) => setEmail(e.target.value)}/>
-                <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
+                <input name="Email" placeholder='Email' onChange={(e) => setEmail(e.target.value)}/>
+                <input name="Password" type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)}/>
             </div>
             <div className="authButton">
                 <button type="submit">Sign In</button>

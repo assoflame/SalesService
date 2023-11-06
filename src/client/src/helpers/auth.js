@@ -1,5 +1,8 @@
+import { server } from "./shared";
+
 export const signIn = async (signInDto) => {
-    let response = await fetch("http://localhost:5090/api/auth/signin", {
+  console.log(document.cookie);
+    let response = await fetch(`${server}/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type" : "application/json"
@@ -9,17 +12,16 @@ export const signIn = async (signInDto) => {
 
     if(response.ok){
       let result = await response.json();
-    //   document.cookie = `accessToken=${result.accessToken}; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
-
+      document.cookie = `accessToken=${result.token.accessToken}; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
       console.log('success sign in');
-      console.log(result.token);
+      console.log(document.cookie);
     } else {
       console.log("sign in error");
     }
 }
 
 export const signUp = async (signUpDto) => {
-    let response = await fetch("http://localhost:5090/api/auth/signup", {
+    let response = await fetch(`${server}/auth/signup`, {
         method: "POST",
         headers: {
             "Content-Type" : "application/json"
@@ -32,4 +34,16 @@ export const signUp = async (signUpDto) => {
     } else {
         console.log('sign up error');
     }
+}
+
+export const getAccessToken = () => {
+  let cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; ++i)
+    {
+      if(cookies[i].startsWith('accessToken')) {
+        return cookies[i].split('=')[1];
+      }
+    }
+
+    return '';
 }
