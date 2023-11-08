@@ -82,7 +82,7 @@ namespace Controllers
         }
 
         [HttpGet("{userId:int}/ratings")]
-        public async Task<IActionResult> GetUserRatings(int userId, [FromBody] RatingParameters ratingParams)
+        public async Task<IActionResult> GetUserRatings(int userId, [FromQuery] RatingParameters ratingParams)
         {
             var ratingsWithMetaData = await _services
                 .UserService

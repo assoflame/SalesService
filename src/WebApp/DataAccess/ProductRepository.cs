@@ -38,8 +38,6 @@ namespace DataAccess
         public async Task<Product?> GetProductByIdAsync(int id, bool trackChanges)
             => await FindByCondition(product => product.Id == id, trackChanges)
                 .Include(product => product.Images)
-                .Include(product => product.User)
-                    .ThenInclude(user => user.RatingsAsSeller)
                 .FirstOrDefaultAsync();
 
         public async Task<PagedList<Product>> GetUserProductsAsync(
