@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../helpers/products";
+import { getProductById, getUserRatings } from "../helpers/products";
 
 
 const Product = () => {
     const {id} = useParams();
     const [product, setProduct] = useState({});
+    const [userRatings, setUserRatings] = useState([]);
 
     useEffect(() => {
         fetchProduct();
-    });
+    }, []);
     
     const fetchProduct = async () => {
-        setProduct(await getProductById(id));
+        let product = await getProductById(id);
+        setProduct(product);
+        setUserRatings([...await getUserRatings(product?.userId)]);
     }
 
     return (
@@ -31,8 +34,8 @@ const Product = () => {
             <div>
                 <div>Отзывы продавца:</div>
                 {
-                    product?.user?.ratings?.length > 0
-                    ? product.user.ratings.map((rating, index) => <div key={index}>Кол-во звёзд: {rating.starsCount}<br/>Отзыв: {rating.comment}</div>)
+                    userRatings.length > 0
+                    ? userRatings.map((rating, index) => <div key={index}>Кол-во звёзд: {rating.starsCount}<br/>Отзыв: {rating.comment}</div>)
                     : <div>У продавца нет отзывов</div>
                 }
             </div>

@@ -3,28 +3,36 @@ import { getProducts } from "../helpers/products";
 import ProductCard from "./ProductCard";
 
 
-
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
-    // const [searchString, setSearchString] = useState('');
-    // const [minPrice, setMinPrice] = useState('');
-    // const [maxPrice, setMaxPrice] = useState('');
+    const [filter, setFilter] = useState({
+        searchString : '',
+        minPrice : '',
+        maxPrice : ''
+    });
+
+    const searchProducts = async () => {
+        await fetchProducts();
+    }
 
     useEffect(() => {
         fetchProducts();
     }, [])
 
-    const fetchProducts = async () => {
-        setProducts([...await getProducts()]);
+    const fetchProducts = async () => { 
+        setProducts([...await getProducts(filter)]);
     }
 
     return (
         <>
-            {/* <div>
-                <input onChange={e => setSearchString(e.target.value)} placeholder="Поиск..."/>
-                <input onChange={e => setMinPrice(e.target.value)} placeholder="Минимальная цена"/>
-                <input onChange={e => setMaxPrice(e.target.value)} placeholder="Максимальная цена"/>
-            </div> */}
+            <div>
+                <div>
+                    <input onChange={e => setFilter({ ...filter, searchString: e.target.value})} placeholder="Поиск..."/>
+                    <input onChange={e => setFilter({ ...filter, minPrice: e.target.value})} placeholder="Минимальная цена"/>
+                    <input onChange={e => setFilter({ ...filter, maxPrice: e.target.value})} placeholder="Максимальная цена"/>
+                </div>
+                <button onClick={async () => await searchProducts()}>Найти</button>
+            </div>
             {
                 products.length > 0 &&
                 products.map(product => <ProductCard key={product.id} productDto={product}/>)

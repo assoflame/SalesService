@@ -1,8 +1,10 @@
 import { getAccessToken } from "./auth";
 import { server } from "./shared";
 
-export const getProducts = async () => {
-    let response = await fetch(`${server}/products`);
+export const getProducts = async (filter) => {
+    let query = createQuery(`${server}/products`, filter);
+    console.log(query);
+    let response = await fetch(query);
 
     if(response.ok) {
       let result = await response.json();
@@ -11,6 +13,19 @@ export const getProducts = async () => {
     } else {
       console.log("get products error");
     }
+
+    return [];
+}
+
+const createQuery = (url, queryParams) => {
+  let query = url + '?';
+  Object.entries(queryParams).forEach( entry => {
+    const [key, value] = entry;
+    query = query.concat(value !== '' ? `${key}=${value}&`: '');
+  }
+  )
+
+  return query;
 }
 
 export const getProductById = async (productId) => {
@@ -42,3 +57,16 @@ export const createProduct = async (product) => {
   }
 }
 
+export const getUserRatings = async (id) => {
+  let response = await fetch(`${server}/users/${id}/ratings`);
+
+  if(response.ok) {
+    let ratings = await response.json();
+    console.log('success user ratings fetch');
+    return ratings;
+  } else {
+    console.log('user ratings fetch error');
+  }
+
+  return [];
+}
