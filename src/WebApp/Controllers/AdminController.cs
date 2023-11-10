@@ -34,6 +34,14 @@ namespace Controllers
             return Ok(usersWithMetaData.users);
         }
 
+        [HttpGet("users/{userId:int}")]
+        public async Task<IActionResult> GetUser(int userId)
+        {
+            var user = await _services.UserService.GetUserByIdAsync(userId);
+
+            return Ok(user);
+        }
+
         [HttpPatch("users/{userId:int}")]
         public async Task<IActionResult> BlockUser(int userId)
         {

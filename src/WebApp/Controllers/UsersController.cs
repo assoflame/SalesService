@@ -12,6 +12,7 @@ namespace Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IServiceManager _services;
@@ -21,7 +22,6 @@ namespace Controllers
             _services = services;
         }
 
-        [Authorize]
         [HttpPost("{userId:int}/ratings")]
         public async Task<IActionResult> RateUser(int userId, [FromBody] RatingCreationDto rateDto)
         {
@@ -39,7 +39,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpPost("{userId:int}/messages")]
         public async Task<IActionResult> SendMessage(int userId, [FromBody] MessageCreationDto messageCreationDto)
         {
@@ -53,7 +52,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpGet("/api/chats")]
         public async Task<IActionResult> GetUserChats()
         {
@@ -67,7 +65,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpGet("/api/chats/{chatId:int}")]
         public async Task<IActionResult> GetUserChat(int chatId)
         {
@@ -81,6 +78,7 @@ namespace Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpGet("{userId:int}/ratings")]
         public async Task<IActionResult> GetUserRatings(int userId, [FromQuery] RatingParameters ratingParams)
         {
