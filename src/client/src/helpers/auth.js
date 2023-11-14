@@ -12,9 +12,8 @@ export const signIn = async (signInDto) => {
 
     if(response.ok){
       let result = await response.json();
-      document.cookie = `accessToken=${result.token.accessToken}; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
+      document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
       console.log('success sign in');
-      console.log(document.cookie);
     } else {
       console.log("sign in error");
     }
