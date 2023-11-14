@@ -21,6 +21,7 @@ namespace DataAccess
             var products = await FindAll(trackChanges)
                 .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
                 .Search(productParameters?.SearchString)
+                .Sort(productParameters.OrderBy)
                 .Include(product => product.Images)
                 .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
                 .Take(productParameters.PageSize)

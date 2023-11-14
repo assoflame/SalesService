@@ -29,6 +29,8 @@ namespace Controllers
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(pagedProducts.metaData));
 
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
+
             return Ok(pagedProducts.products);
         }
 
@@ -49,6 +51,8 @@ namespace Controllers
 
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(userProducts.metaData));
+
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
             return Ok(userProducts.products);
         }

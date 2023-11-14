@@ -31,6 +31,8 @@ namespace Controllers
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(usersWithMetaData.metaData));
 
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
+
             return Ok(usersWithMetaData.users);
         }
 

@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,15 @@ namespace Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ChatDto>> GetUserChatsAsync(int userId)
+        public async Task<(IEnumerable<ChatDto> chatsDto, MetaData metaData)> 
+            GetUserChatsAsync(int userId, ChatParameters chatParams)
         {
-            var chats = await _unitOfWork.Chats.GetUserChatsAsync(userId, trackChanges: false);
+            var chatsWithMetaData = await _unitOfWork.Chats
+                .GetUserChatsAsync(userId, chatParams, trackChanges: false);
 
-            var chatsDto = _mapper.Map<IEnumerable<ChatDto>>(chats);
+            var chatsDto = _mapper.Map<IEnumerable<ChatDto>>(chatsWithMetaData);
 
-            return chatsDto;
+            return (chatsDto: chatsDto, metaData: chatsWithMetaData.MetaData);
         }
 
         public async Task<ChatDto> GetUserChatAsync(int userId, int chatId)

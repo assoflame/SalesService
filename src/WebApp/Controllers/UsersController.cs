@@ -53,13 +53,19 @@ namespace Controllers
         }
 
         [HttpGet("/api/chats")]
-        public async Task<IActionResult> GetUserChats()
+        public async Task<IActionResult> GetUserChats([FromQuery] ChatParameters chatParams)
         {
             if(int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
             {
-                var chatsDto = await _services.ChatService.GetUserChatsAsync(userId);
+                var pagedChats = await _services.ChatService
+                    .GetUserChatsAsync(userId, chatParams);
 
-                return Ok(chatsDto);
+                Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedChats.metaData));
+
+                Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
+
+                return Ok(pagedChats.chatsDto);
             }
 
             return BadRequest();
@@ -88,6 +94,8 @@ namespace Controllers
 
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(ratingsWithMetaData.metaData));
+
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
             return Ok(ratingsWithMetaData.ratingsDto);
         }

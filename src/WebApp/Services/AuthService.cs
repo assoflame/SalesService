@@ -31,12 +31,12 @@ namespace Services
             _configuration = configuration;
         }
 
-        public async Task SignUpAsync(SignUpDto userForSignUpDto)
+        public async Task SignUpAsync(SignUpDto userSignUpDto)
         {
-            var user = _mapper.Map<User>(userForSignUpDto);
+            var user = _mapper.Map<User>(userSignUpDto);
 
             user.PasswordSalt = user.FirstName + user.LastName;
-            user.PasswordHash = ComputeMD5HashString(userForSignUpDto.Password + user.PasswordSalt);
+            user.PasswordHash = ComputeMD5HashString(userSignUpDto.Password + user.PasswordSalt);
 
             _unitOfWork.Users.Create(user);
 
