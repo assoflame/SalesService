@@ -6,6 +6,8 @@ import { Select } from "../components/UI/Select/Select";
 import { getPagesCount } from "../helpers/shared";
 import { usePagination } from "../hooks/usePagination";
 import Loader from "../components/UI/Loader/Loader";
+import Header from '../components/UI/Header/Header';
+import Menu from "../components/UI/Menu/Menu";
 
 
 export const Products = () => {
@@ -39,6 +41,8 @@ export const Products = () => {
 
     return (
         <>
+            <Header/>
+            <Menu/>
             <div>
                 <div>
                     <input onChange={e => setQueryParams({ ...queryParams, searchString: e.target.value })} placeholder="Поиск..." />
