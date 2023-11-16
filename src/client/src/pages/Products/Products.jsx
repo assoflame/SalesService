@@ -48,7 +48,7 @@ export const Products = () => {
 
     return (
         <>
-            <Header><Logout classNames={styles.logoutButton}/></Header>
+            <Header><Logout/></Header>
             <Menu />
             <div className={styles.container}>
                 <div className={styles.searchParams}>
