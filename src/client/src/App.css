@@ -1,8 +1,8 @@
 * {
   margin: 0;
   padding: 0;
-  /* background-color: #F4EEE0; */
-  font-size: 30px;
+  font-size: 18px;
+  font-family: 'Inter';
 }
 
 a {
@@ -21,4 +21,13 @@ input:focus, textarea:focus{
 
 input:focus::placeholder {
   color: transparent;
+}
+
+::-webkit-scrollbar {
+  background-color: #EEEEEE;
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #222831;
 }

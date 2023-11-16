@@ -11,15 +11,16 @@
     display: flex;
     color: red;
     font-weight: 500;
-    font-family: 'Irish Grover';
 }
 
 .leftLogo {
     color: #FFD369;
     font-size: 35px;
+    font-family : 'Irish Grover';
 }
 
 .rightLogo {
     color: #EEEEEE;
     font-size: 35px;
+    font-family : 'Irish Grover';
 }
