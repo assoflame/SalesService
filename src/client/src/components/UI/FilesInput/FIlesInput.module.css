@@ -1,0 +1,33 @@
+#input {
+    display: none;
+}
+
+.upload {
+    border-bottom: 2px solid #222831;
+}
+
+.upload:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.images {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.image {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.imageName {
+    font-size: 15px;
+}
+
+.removeButton {
+    font-size: 15px;
+    align-self: flex-start;
+}

@@ -63,7 +63,7 @@ export const Products = () => {
                     <input className={styles.input} onChange={e => setQueryParams({ ...queryParams, minPrice: e.target.value })} placeholder="Мин. цена" />
                     <input className={styles.input} onChange={e => setQueryParams({ ...queryParams, maxPrice: e.target.value })} placeholder="Макс. цена" />
                     <input className={styles.input} onChange={e => setQueryParams({ ...queryParams, searchString: e.target.value })} placeholder="Поиск..." />
-                    <Button callback={async () => await fetchProducts()}>Найти</Button>
+                    <Button callback={async () => {setQueryParams({...queryParams, pageNumber: 1}); await fetchProducts();}}>Найти</Button>
                 </div>
                 <Button callback={() => setProductCreationVisible(true)}>Создать товар</Button>
                 <Modal visible={productCreationVisible} setVisible={setProductCreationVisible}>
