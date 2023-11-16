@@ -13,6 +13,7 @@ import PageNumbersList from "../../components/UI/Paging/PageNumbersList/PageNumb
 import Modal from "../../components/UI/Modal/Modal";
 import ProductCreationForm from "../../components/ProductCreation/ProductCreationForm";
 import Button from "../../components/UI/Button/Button";
+import Logout from "../../components/Auth/Logout"
 
 
 export const Products = () => {
@@ -47,7 +48,7 @@ export const Products = () => {
 
     return (
         <>
-            <Header />
+            <Header><Logout classNames={styles.logoutButton}/></Header>
             <Menu />
             <div className={styles.container}>
                 <div className={styles.searchParams}>

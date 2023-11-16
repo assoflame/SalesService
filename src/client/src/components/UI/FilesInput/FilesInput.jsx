@@ -45,7 +45,7 @@ const FilesInput = ({ uploadedFiles, setUploadedFiles }) => {
         <div>
             <input id={styles.input} type="file" accept="image/*" multiple onChange={uploadFiles} />
             <label htmlFor={styles.input}>
-                <a className={styles.upload}>Загрузить файлы</a>
+                <a className={styles.upload}>Загрузить изображения</a>
             </label>
             <div className={styles.images}>
                 {

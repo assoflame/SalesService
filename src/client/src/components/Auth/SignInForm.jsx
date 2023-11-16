@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { signIn } from "../../helpers/auth";
 import styles from "./AuthForm.module.css"
+import { useNavigate } from "react-router-dom";
 
 
 const SignInForm = () => {
@@ -9,10 +10,14 @@ const SignInForm = () => {
         password : ''
     });
 
+    const navigate = useNavigate();
+    const productsPage = '/products';
+
     return (
         <form className={styles.form} onSubmit={async (e) => {
             e.preventDefault();
             await signIn(form);
+            navigate(productsPage, {replace : true});
         }}>
             <div className={styles.authInputs}>
                 <input className={styles.authInput} name="Email" placeholder='Почта' onChange={(e) => setForm({...form, email : e.target.value})}/>

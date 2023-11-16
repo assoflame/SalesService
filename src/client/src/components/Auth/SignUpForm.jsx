@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { signUp } from "../../helpers/auth";
+import { signIn, signUp } from "../../helpers/auth";
 import styles from "./AuthForm.module.css"
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
     const [form, setForm] = useState({
@@ -12,10 +13,15 @@ const SignUpForm = () => {
         age : ''
     });
 
+    const navigate = useNavigate();
+    const productsPage = '/products';
+
     return (
         <form className={styles.form} onSubmit={async (e) => {
             e.preventDefault();
             await signUp(form);
+            await signIn({email: form.email, password: form.password});
+            navigate(productsPage, {replace: true});
         }}>
             <div className={styles.authInputs}>
                 <input className={styles.authInput} name="FirstName" placeholder='Имя' onChange={(e) => setForm({...form, firstName : e.target.value})}/>
