@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,5 +21,8 @@ namespace Shared.DataTransferObjects
 
         [Required]
         public decimal Price { get; init; }
+
+        [ImageValidation]
+        public IFormFileCollection? Images { get; init; }
     }
 }

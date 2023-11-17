@@ -59,7 +59,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductCreationDto productCreationDto)
+        public async Task<IActionResult> CreateProduct([FromForm] ProductCreationDto productCreationDto)
         {
             if (productCreationDto is null)
                 return BadRequest("product for creation dto object is null");

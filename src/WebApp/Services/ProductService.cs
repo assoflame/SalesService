@@ -52,7 +52,8 @@ namespace Services
             return _mapper.Map<ProductDto>(product);
         }
 
-        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters)
+        public async Task<(IEnumerable<ProductDto> products, MetaData metaData)>
+            GetUserProductsAsync(int userId, ProductParameters productParameters)
         {
             if(!productParameters.ValidPriceRange)
                 throw new InvalidPriceRangeException();
@@ -79,10 +80,9 @@ namespace Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<ProductDto> CreateProductAsync(int userId, ProductCreationDto productForCreationDto,
-            IFormFileCollection? images = null)
+        public async Task<ProductDto> CreateProductAsync(int userId, ProductCreationDto productCreationDto)
         {
-            var productEntity = _mapper.Map<Product>(productForCreationDto);
+            var productEntity = _mapper.Map<Product>(productCreationDto);
 
             productEntity.UserId = userId;
             productEntity.CreationDate = DateTime.UtcNow;
@@ -91,9 +91,9 @@ namespace Services
 
             await _unitOfWork.SaveAsync();
 
-            if(images is not null)
-                await AddPhotosAsync(userId, productEntity.Id, images);
-
+            if (productCreationDto.Images is not null)
+                await AddPhotosAsync(userId, productEntity.Id, productCreationDto.Images);
+            
             return _mapper.Map<ProductDto>(productEntity);
         }
 
@@ -162,7 +162,7 @@ namespace Services
 
         private async Task<ProductImage> CreateProductImage(Product product, IFormFile image)
         {
-            var directoryPath = $@"{Directory.GetCurrentDirectory()}\images\{product.Id}";
+            var directoryPath = $@"{Directory.GetCurrentDirectory()}\wwwroot\images\{product.Id}";
 
             if(!Directory.Exists(directoryPath))
             {
@@ -186,7 +186,7 @@ namespace Services
             var productImage = new ProductImage
             {
                 ProductId = product.Id,
-                Path = imagePath
+                Path = String.Join("/", "images", product.Id, string.Concat(imageNumber, Path.GetExtension(image.FileName)))
             };
 
             return productImage;

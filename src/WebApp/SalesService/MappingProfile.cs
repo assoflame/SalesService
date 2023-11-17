@@ -16,7 +16,8 @@ namespace Web
 
             CreateMap<SignUpDto, User>();
 
-            CreateMap<ProductCreationDto, Product>();
+            CreateMap<ProductCreationDto, Product>()
+                .ForMember(nameof(ProductCreationDto.Images), opt => opt.Ignore());
 
             CreateMap<Product, ProductDto>()
                 .ForCtorParam(nameof(ProductDto.ImagePaths),
