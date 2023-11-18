@@ -21,26 +21,12 @@ import ModalReview from "../ModalReview/ModalReview";
 const Product = () => {
     const { id } = useParams();
     const [product, setProduct] = useState({});
-    const [userRatings, setUserRatings] = useState([]);
-    const [queryParams, setQueryParams] = useState({
-        pageNumber: 1,
-        pageSize: 5
-    });
+
     const [messageVisible, setMessageVisible] = useState(false);
 
-    const [totalPages, setTotalPages] = useState(0);
-    const pages = usePagination(totalPages);
-
     const [fetchProduct, isProductLoading, fetchProductError] = useFetching(async () => {
-        let product = await getProductById(id);
-        setProduct(product);
-
-        let response = await getUserRatings(product.userId);
-        let reviews = [...await response.json()];
-        setUserRatings(reviews);
-        let totalCount = JSON.parse(response.headers.get("X-Pagination")).TotalCount;
-        setTotalPages(getPagesCount(totalCount, queryParams.pageSize));
-
+        let prod = await getProductById(id);
+        setProduct(prod);
     }, () => setProduct({}));
 
     useEffect(() => {
@@ -72,19 +58,7 @@ const Product = () => {
                         </div>
                     </div>
             }
-            <div className={styles.reviewsContainer}>
-                <div className={styles.reviewsHeader}>
-                    <h1 className={styles.reviewsTitle}>Отзывы продавца</h1>
-                    <Button>Оставить отзыв</Button>
-                </div>
-                <Reviews reviews={userRatings} />
-                <PageNumbersList
-                    classNames={styles.pagesList}
-                    pages={pages}
-                    activePage={queryParams.pageNumber}
-                    setPage={(page) => setQueryParams({ ...queryParams, pageNumber: page })} />
-            </div>
-            <Modal><ModalReview/></Modal>
+            <Reviews userId={product.userId} key={product?.userId}/>
         </>
     )
 }

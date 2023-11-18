@@ -14,6 +14,7 @@ export const signIn = async (signInDto) => {
     document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
     console.log('success sign in');
   } else {
+    console.log(response.error);
     console.log("sign in error");
   }
 }

@@ -4,30 +4,66 @@ import { usePagination } from "../../hooks/usePagination";
 import { useFetching } from "../../hooks/useFetching";
 import { getPagesCount } from "../../helpers/shared";
 import styles from "./Reviews.module.css"
+import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
+import Button from "../UI/Button/Button";
+import Modal from "../UI/Modal/Modal";
+import ModalReview from "../ModalReview/ModalReview";
 
 
 
-const Reviews = ({ reviews }) => {
+const Reviews = ({ userId }) => {
+    const [reviews, setReviews] = useState([]);
+    const [queryParams, setQueryParams] = useState({
+        pageNumber: 1,
+        pageSize: 2
+    });
+
+    const [totalPages, setTotalPages] = useState(0);
+    const pages = usePagination(totalPages);
+    const [reviewVisible, setReviewVisible] = useState(false);
+
+    const [fetchReviews, isReviewsLoading, fetchReviewsError] = useFetching(async () => {
+        let response = await getUserRatings(userId, queryParams);
+        setReviews([...await response.json()]);
+        let totalCount = JSON.parse(response.headers.get("X-Pagination")).TotalCount;
+        console.log(JSON.parse(response.headers.get("X-Pagination")));
+        setTotalPages(getPagesCount(totalCount, queryParams.pageSize));
+    }, () => setReviews([]));
 
     useEffect(() => {
-        console.log(reviews);
-    }, [reviews]);
+        if(userId)
+            fetchReviews();
+    }, [queryParams.pageNumber]);
 
     return (
-        <div className={styles.list}>
-            {
-                reviews.length > 0
-                && reviews.map(review =>
-                    <div key={review.user.id} className={styles.review}>
-                        <div>{review.user.fullName}, {review.user.city}</div>
-                        <div>Оценка: {review.starsCount}</div>
-                        <div className={styles.commentWithDate}>
-                            <div>Комментарий: {review.comment}</div>
-                            <div>{new Date(review.creationDate).toLocaleString()}</div>
+        <div className={styles.reviewsContainer}>
+            <div className={styles.reviewsHeader}>
+                <h1 className={styles.reviewsTitle}>Отзывы продавца</h1>
+                <Button callback={() => setReviewVisible(true)}>Оставить отзыв</Button>
+            </div>
+            <div className={styles.list}>
+                {
+                    reviews.length > 0
+                    && reviews.map(review =>
+                        <div key={review.user.id} className={styles.review}>
+                            <div>{review.user.fullName}, {review.user.city}</div>
+                            <div>Оценка: {review.starsCount}</div>
+                            <div className={styles.commentWithDate}>
+                                <div>Комментарий: {review.comment}</div>
+                                <div>{new Date(review.creationDate).toLocaleString()}</div>
+                            </div>
                         </div>
-                    </div>
-                )
-            }
+                    )
+                }
+            </div>
+            <PageNumbersList
+                classNames={styles.pagesList}
+                pages={pages}
+                activePage={queryParams.pageNumber}
+                setPage={(page) => {
+                    setQueryParams({ ...queryParams, pageNumber: page });
+                }} />
+            <Modal visible={reviewVisible} setVisible={setReviewVisible}><ModalReview sellerId={userId} /></Modal>
         </div>
     )
 }

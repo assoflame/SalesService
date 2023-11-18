@@ -15,7 +15,7 @@ const ModalReview = ({ sellerId }) => {
             <div>
                 <textarea placeholder="Комментарий" onChange={e => setReview(e.target.value)}/>
             </div>
-            <button onClick={() => sendReview(sellerId)}>Отправить</button>
+            <button onClick={() => sendReview(sellerId, {starsCount, comment : review})}>Отправить</button>
         </form>
     )
 }

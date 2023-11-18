@@ -38,6 +38,19 @@ export const getUsers = async () => {
     }
 }
 
-export const sendReview = async (userId) => {
+export const sendReview = async (userId, review) => {
+    let response = await fetch(`${api}/users/${userId}/ratings`, {
+        method : 'POST',
+        headers : {
+            "Content-Type" : "application/json",
+            'Authorization' : `Bearer ${getAccessToken()}`
+        },
+        body: JSON.stringify(review)
+    });
 
+    if(response.ok) {
+        console.log('rate user success');
+    } else {
+        console.log('rate user error');
+    }
 }
