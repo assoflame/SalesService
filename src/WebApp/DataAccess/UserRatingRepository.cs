@@ -17,6 +17,7 @@ namespace DataAccess
         public async Task<PagedList<UserRating>> GetUserRatingsAsync(int userId, RatingParameters ratingParams, bool trackChanges)
         {
             var userRatings = await FindByCondition(userRating => userRating.UserId == userId, trackChanges)
+                .Include(userRating => userRating.UserWhoRated)
                 .OrderByDescending(userRating => userRating.CreationDate)
                 .Skip((ratingParams.PageNumber - 1) * ratingParams.PageSize)
                 .Take(ratingParams.PageSize)

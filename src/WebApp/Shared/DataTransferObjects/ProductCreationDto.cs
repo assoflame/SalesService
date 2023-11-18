@@ -12,11 +12,11 @@ namespace Shared.DataTransferObjects
     public record ProductCreationDto
     {
         [Required]
-        [MaxLength(15, ErrorMessage = "Название продукта не должно превышать 15 символов.")]
+        [MaxLength(30, ErrorMessage = "Название продукта не должно превышать 15 символов.")]
         public string Name { get; init; }
 
         [Required]
-        [MaxLength(200, ErrorMessage = "Описание продукта не должно превышать  символов.")]
+        [MaxLength(300, ErrorMessage = "Описание продукта не должно превышать  символов.")]
         public string Description { get; init; }
 
         [Required]

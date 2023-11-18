@@ -21,17 +21,4 @@
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\images\2\1.jpg" />
-    <None Include="wwwroot\images\2\2.jpg" />
-    <None Include="wwwroot\images\2\3.jpg" />
-    <None Include="wwwroot\images\2\4.jpg" />
-    <None Include="wwwroot\images\2\5.jpg" />
-    <None Include="wwwroot\images\2\6.jpg" />
-    <None Include="wwwroot\images\2\7.jpg" />
-    <None Include="wwwroot\images\2\8.jpg" />
-    <None Include="wwwroot\images\2\9.jpg" />
-    <None Include="wwwroot\images\4\2.jpg" />
-  </ItemGroup>
-
 </Project>

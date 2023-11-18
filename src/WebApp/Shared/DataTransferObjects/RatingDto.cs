@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record RatingDto(UserDto UserWhoRated, int starsCount, string? Comment);
+    public record RatingDto(UserDto User, int StarsCount, string? Comment, DateTime CreationDate);
 }

@@ -38,7 +38,7 @@ namespace DataAccess.Extensions
                 case "price": return products.
                         OrderBy(product => product.Price);
                 case "date": return products
-                        .OrderBy(product => product.CreationDate);
+                        .OrderByDescending(product => product.CreationDate);
                 default: return products
                         .OrderByDescending(product => product.Price);
             }

@@ -67,7 +67,8 @@ namespace Services
                 UserWhoRatedId = userWhoRateId,
                 UserId = userId,
                 StarsCount = rateDto.StarsCount,
-                Comment = rateDto.Comment
+                Comment = rateDto.Comment,
+                CreationDate = DateTime.UtcNow
             };
 
             _unitOfWork.UserRatings.Create(rating);

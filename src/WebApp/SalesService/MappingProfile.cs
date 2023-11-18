@@ -38,7 +38,7 @@ namespace Web
             CreateMap<ProductImage, ProductImageDto>();
 
             CreateMap<UserRating, RatingDto>()
-                .ForCtorParam(nameof(RatingDto.UserWhoRated),
+                .ForCtorParam(nameof(RatingDto.User),
                 opt => opt.MapFrom(userRating => userRating.UserWhoRated));
         }
     }
