@@ -1,9 +1,8 @@
 import { getAccessToken } from "./auth";
-import { createQuery, server } from "./shared";
+import { createQuery, api } from "./shared";
 
 export const getProducts = async (filter) => {
-    let query = createQuery(`${server}/products`, filter);
-    console.log(query);
+    let query = createQuery(`${api}/products`, filter);
     let response = await fetch(query);
 
     if(response.ok) {
@@ -16,7 +15,7 @@ export const getProducts = async (filter) => {
 }
 
 export const getProductById = async (productId) => {
-  let response = await fetch(`${server}/products/${productId}`);
+  let response = await fetch(`${api}/products/${productId}`);
 
   if(response.ok) {
     let product = await response.json();
@@ -28,13 +27,22 @@ export const getProductById = async (productId) => {
 }
 
 export const createProduct = async (product) => {
-  let response = await fetch(`${server}/products`, {
+  console.log(getAccessToken());
+  console.log(product);
+  let formData = new FormData();
+  formData.append('Name', product.name);
+  formData.append('Description', product.description);
+  formData.append('Price', product.price);
+  product.images.forEach(image => formData.append('Images', image));
+
+  console.log([...formData]);
+
+  let response = await fetch(`${api}/products`, {
     method: "POST",
     headers: {
-      "Content-Type" : "application/json",
       'Authorization' : `Bearer ${getAccessToken()}`
     },
-    body: JSON.stringify(product)
+    body: formData
   });
 
   if(response.ok) {
@@ -45,7 +53,7 @@ export const createProduct = async (product) => {
 }
 
 export const getUserRatings = async (id, queryParams) => {
-  let query = createQuery(`${server}/users/${id}/ratings`, queryParams);
+  let query = createQuery(`${api}/users/${id}/ratings`, queryParams);
   let response = await fetch(query);
 
   if(response.ok) {

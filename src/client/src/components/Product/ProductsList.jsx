@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import ProductCard from "../ProductCard/ProductCard";
+import React from "react";
+import ProductCard from "./ProductCard";
 import styles from "./ProductsList.module.css"
 import { Link } from "react-router-dom";
 

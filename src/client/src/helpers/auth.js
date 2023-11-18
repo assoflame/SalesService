@@ -1,8 +1,7 @@
-import { server } from "./shared";
+import { api } from "./shared";
 
 export const signIn = async (signInDto) => {
-  console.log(document.cookie);
-  let response = await fetch(`${server}/auth/signin`, {
+  let response = await fetch(`${api}/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -20,7 +19,7 @@ export const signIn = async (signInDto) => {
 }
 
 export const signUp = async (signUpDto) => {
-  let response = await fetch(`${server}/auth/signup`, {
+  let response = await fetch(`${api}/auth/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -51,6 +50,5 @@ export const logout = () => {
 }
 
 export const loggedIn = () => {
-  console.log(getAccessToken());
   return getAccessToken() !== '';
 }

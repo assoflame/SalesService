@@ -7,11 +7,11 @@ import { usePagination } from "../../hooks/usePagination";
 import Loader from "../../components/UI/Loader/Loader";
 import Header from '../../components/UI/Header/Header';
 import Menu from "../../components/UI/Menu/Menu";
-import ProductsList from "../../components/ProductsList/ProductsList";
+import ProductsList from "../../components/Product/ProductsList";
 import styles from "./Products.module.css"
 import PageNumbersList from "../../components/UI/Paging/PageNumbersList/PageNumbersList";
 import Modal from "../../components/UI/Modal/Modal";
-import ProductCreationForm from "../../components/ProductCreation/ProductCreationForm";
+import ProductCreationForm from "../../components/Product/ProductCreationForm";
 import Button from "../../components/UI/Button/Button";
 import Logout from "../../components/Auth/Logout"
 
@@ -74,7 +74,7 @@ export const Products = () => {
                 {productsError && <div>Ошибка загрузки товаров</div>}
                 {
                     isProductsLoading
-                        ? <Loader />
+                        ? <Loader className={styles.loader}/>
                         : <div className={styles.productsPage}>
                             <ProductsList products={products} />
                             <PageNumbersList

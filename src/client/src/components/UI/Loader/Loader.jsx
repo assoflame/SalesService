@@ -2,9 +2,9 @@ import React from "react";
 import styles from "./Loader.module.css"
 
 
-const Loader = () => {
+const Loader = ({className}) => {
     return (
-        <div className={styles.loader}>
+        <div className={[className,styles.loader].join(' ')}>
         </div>
     )
 }

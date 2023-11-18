@@ -1,25 +1,22 @@
 import React, { useState } from "react";
 import styles from "./ModalReview.module.css"
+import { sendReview } from "../../helpers/users";
 
 
 const ModalReview = ({ sellerId }) => {
     const [review, setReview] = useState('');
-    const [starsCount, setStarsCount] = useState(5);
+    const [starsCount, setStarsCount] = useState(0);
 
     return (
-        <div>
+        <form>
             <div>
-                <label htmlFor="">Оценка</label>
-                <textarea onChange={e => setStarsCount(e.target.value)}>{starsCount}</textarea>
+                <input placeholder="Оценка" onChange={e => setStarsCount(e.target.value)}/>
             </div>
             <div>
-                <label>Комментарий</label>
-                <textarea onChange={e => setReview(e.target.value)}>
-                    {review}
-                </textarea>
+                <textarea placeholder="Комментарий" onChange={e => setReview(e.target.value)}/>
             </div>
-            <button onClick={() => sendMessage(sellerId)}>Отправить</button>
-        </div>
+            <button onClick={() => sendReview(sellerId)}>Отправить</button>
+        </form>
     )
 }
 

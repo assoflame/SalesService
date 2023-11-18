@@ -1,8 +1,8 @@
 import { getAccessToken } from "./auth";
-import { server } from "./shared";
+import { api } from "./shared";
 
 export const getUser = async (id) => {
-    let response = await fetch(`${server}/admin/users/${id}`, {
+    let response = await fetch(`${api}/admin/users/${id}`, {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
@@ -20,7 +20,7 @@ export const getUser = async (id) => {
 }
 
 export const getUsers = async () => {
-    let response = await fetch(`${server}/admin/users`, {
+    let response = await fetch(`${api}/admin/users`, {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
@@ -36,4 +36,8 @@ export const getUsers = async () => {
     } else {
         console.log('get users error');
     }
+}
+
+export const sendReview = async (userId) => {
+
 }

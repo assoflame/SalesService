@@ -4,3 +4,7 @@
     right: 0;
     margin-right: 50px;
 }
+
+.button:hover {
+    border: 2px solid #EEEEEE;
+}

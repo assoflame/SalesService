@@ -1,8 +1,8 @@
 import { getAccessToken } from "./auth";
-import { createQuery, server } from "./shared"
+import { createQuery, api } from "./shared"
 
 export const getChats = async (queryParams) => {
-    let queryStr = createQuery(`${server}/chats`, queryParams);
+    let queryStr = createQuery(`${api}/chats`, queryParams);
     let response = await fetch(queryStr, {
         method : 'GET',
         headers : {
@@ -22,7 +22,7 @@ export const getChats = async (queryParams) => {
 }
 
 export const getChatById = async (id) => {
-    let response = await fetch(`${server}/chats/${id}`, {
+    let response = await fetch(`${api}/chats/${id}`, {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
@@ -39,6 +39,19 @@ export const getChatById = async (id) => {
     }
 }
 
-export const sendMessage = async (userId) => {
-    
+export const sendMessage = async (userId, message) => {
+    let response = await fetch(`${api}/users/${userId}/messages`, {
+        method: 'POST',
+        headers : {
+            "Content-Type" : "application/json",
+            'Authorization' : `Bearer ${getAccessToken()}`
+        },
+        body: JSON.stringify(message)
+    });
+
+    if(response.ok) {
+        console.log('send message success');
+    } else {
+        console.log('send message error');
+    }
 }
