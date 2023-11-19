@@ -11,11 +11,11 @@ import ModalReview from "../ModalReview/ModalReview";
 
 
 
-const Reviews = ({ userId }) => {
+const Reviews = ({ className, userId }) => {
     const [reviews, setReviews] = useState([]);
     const [queryParams, setQueryParams] = useState({
         pageNumber: 1,
-        pageSize: 2
+        pageSize: 5
     });
 
     const [totalPages, setTotalPages] = useState(0);
@@ -36,7 +36,7 @@ const Reviews = ({ userId }) => {
     }, [queryParams.pageNumber]);
 
     return (
-        <div className={styles.reviewsContainer}>
+        <div className={[styles.reviewsContainer, className].join(' ')}>
             <div className={styles.reviewsHeader}>
                 <h1 className={styles.reviewsTitle}>Отзывы продавца</h1>
                 <Button callback={() => setReviewVisible(true)}>Оставить отзыв</Button>

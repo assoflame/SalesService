@@ -11,6 +11,11 @@ a {
   text-decoration: none;
 }
 
+textarea {
+  padding: 10px;
+  border: 2px solid #222831;
+}
+
 input {
   outline: none;
   border: none;
@@ -21,6 +26,10 @@ input:focus, textarea:focus{
 }
 
 input:focus::placeholder {
+  color: transparent;
+}
+
+textarea:focus::placeholder {
   color: transparent;
 }
 

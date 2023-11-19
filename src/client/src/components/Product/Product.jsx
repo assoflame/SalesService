@@ -58,7 +58,7 @@ const Product = () => {
                         </div>
                     </div>
             }
-            <Reviews userId={product.userId} key={product?.userId}/>
+            <Reviews className={styles.reviews} userId={product.userId} key={product?.userId}/>
         </>
     )
 }

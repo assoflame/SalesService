@@ -14,3 +14,26 @@
     display: flex;
     justify-content: space-between;
 }
+
+
+.reviewsContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.reviewsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.reviewsTitle {
+    font-size: 23px;
+}
+
+.pagesList {
+    margin-top: 10px;
+    align-self: center;
+}
