@@ -36,6 +36,8 @@ namespace DataAccess
         public async Task<Chat?> GetChatByIdAsync(int chatId, bool trackChanges)
             => await FindByCondition(chat => chat.Id == chatId, trackChanges)
                 .Include(chat => chat.Messages.OrderBy(message => message.CreationDate))
+                .Include(chat => chat.FirstUser)
+                .Include(chat => chat.SecondUser)
                 .OrderBy(chat => chat.CreationDate)
                 .FirstOrDefaultAsync();
 

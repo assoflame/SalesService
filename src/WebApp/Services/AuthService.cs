@@ -132,7 +132,7 @@ namespace Services
             _unitOfWork.Users.Update(_user);
             await _unitOfWork.SaveAsync();
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            return new TokenDto(accessToken, refreshToken);
+            return new TokenDto(_user.Id, accessToken, refreshToken);
         }
         private SigningCredentials GetSigningCredentials()
         {

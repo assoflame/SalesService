@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record ChatDto(UserDto FirstUser, UserDto SecondUser, DateTime CreationDate, MessageDto[] messages);
+    public record ChatDto(int Id, UserDto FirstUser, UserDto SecondUser, DateTime CreationDate, MessageDto[] messages);
 }
