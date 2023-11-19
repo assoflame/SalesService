@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 50px;
+}
+
+.chats {
+    width: 50%;
+}
+
+.chat {
+    width: 50%;
+}

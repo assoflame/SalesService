@@ -2,7 +2,10 @@ import { getAccessToken } from "./auth";
 import { createQuery, api } from "./shared"
 
 export const getChats = async (queryParams) => {
+    console.log('get chats');
     let queryStr = createQuery(`${api}/chats`, queryParams);
+
+    console.log(queryStr);
     let response = await fetch(queryStr, {
         method : 'GET',
         headers : {
@@ -54,4 +57,13 @@ export const sendMessage = async (userId, message) => {
     } else {
         console.log('send message error');
     }
+}
+
+export const getLastMessageTime = (message) => {
+    return new Date(message.creationDate)
+        .toLocaleString()
+        .split(', ')[1]
+        .split(':')
+        .slice(0, 2)
+        .join(':');
 }

@@ -1,0 +1,21 @@
+.card {
+    border: 2px solid #222831;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    min-height: 55px;
+}
+
+.card:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.lastMessage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

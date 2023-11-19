@@ -11,6 +11,7 @@ export const signIn = async (signInDto) => {
 
   if (response.ok) {
     let result = await response.json();
+    window.localStorage.setItem('id', result.token.userId);
     document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
     console.log('success sign in');
   } else {

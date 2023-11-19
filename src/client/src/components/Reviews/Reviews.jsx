@@ -31,7 +31,7 @@ const Reviews = ({ className, userId }) => {
     }, () => setReviews([]));
 
     useEffect(() => {
-        if(userId)
+        if (userId)
             fetchReviews();
     }, [queryParams.pageNumber]);
 
@@ -60,9 +60,7 @@ const Reviews = ({ className, userId }) => {
                 classNames={styles.pagesList}
                 pages={pages}
                 activePage={queryParams.pageNumber}
-                setPage={(page) => {
-                    setQueryParams({ ...queryParams, pageNumber: page });
-                }} />
+                setPage={(page) => setQueryParams({ ...queryParams, pageNumber: page })} />
             <Modal visible={reviewVisible} setVisible={setReviewVisible}><ModalReview sellerId={userId} /></Modal>
         </div>
     )
