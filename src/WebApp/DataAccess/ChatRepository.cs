@@ -22,7 +22,7 @@ namespace DataAccess
                 .Include(chat => chat.FirstUser)
                 .Include(chat => chat.SecondUser)
                 .OrderByDescending(chat => chat.CreationDate)
-                .Skip((chatParams.PageNumber - 1) * chatParams.PageNumber)
+                .Skip((chatParams.PageNumber - 1) * chatParams.PageSize)
                 .Take(chatParams.PageSize)
                 .OrderBy(chat => chat.CreationDate)
                 .ToListAsync();
