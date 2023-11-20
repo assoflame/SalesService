@@ -30,3 +30,8 @@
 .name {
     font-weight: 600;
 }
+
+.deleteButton {
+    width: 30%;
+    align-self: center;
+}

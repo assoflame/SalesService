@@ -55,3 +55,9 @@
     margin-bottom: 100px;
 }
 
+.blockUserButton {
+    width: 20%;
+    align-self: flex-end;
+    margin-top: 5%;
+}
+

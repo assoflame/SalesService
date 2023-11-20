@@ -10,14 +10,24 @@ export const signIn = async (signInDto) => {
   });
 
   if (response.ok) {
-    let result = await response.json();
-    window.localStorage.setItem('id', result.token.userId);
-    document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${new Date(Date.now() + 86400 * 1000).toUTCString()}`;
+    const result = await response.json();
+    const payload = JSON.parse(atob(result.token.accessToken.split('.')[1]));
+
+    console.log(payload);
+    const exp = new Date(payload.exp * 1000).toUTCString();
+
+    localStorage.setItem('id', payload.Id);
+    localStorage.setItem('isAdmin', payload.role.includes('admin'));
+
+    document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${exp}`;
     console.log('success sign in');
-  } else {
-    console.log(response.error);
-    console.log("sign in error");
+    return true;
   }
+  
+  console.log(response.error);
+  console.log("sign in error");
+  return false;
+
 }
 
 export const signUp = async (signUpDto) => {
@@ -53,4 +63,8 @@ export const logout = () => {
 
 export const loggedIn = () => {
   return getAccessToken() !== '';
+}
+
+export const isAdmin = () => {
+  return localStorage.getItem('isAdmin') === 'true';
 }

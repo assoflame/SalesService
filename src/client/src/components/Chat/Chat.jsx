@@ -66,7 +66,7 @@ const Chat = ({ className, chatId }) => {
             {
                 chat?.messages?.length > 0 &&
                 <div className={[styles.chat, className].join(' ')}>
-                    <div>{getOtherUser().fullName}</div>
+                    <div className={styles.username}>{getOtherUser().fullName}</div>
                     <div className={styles.messages} ref={messageRef}>
                         {
                             messages?.length > 0 &&

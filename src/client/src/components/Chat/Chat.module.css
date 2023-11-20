@@ -4,6 +4,15 @@
     align-items: center;
 }
 
+.username {
+    font-size: 20px;
+    border-bottom: 2px solid #222831;
+    width: 30%;
+    text-align: center;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
 .messages {
     width: 80%;
     display: flex;
@@ -73,6 +82,7 @@
 .messageCreation {
     display: flex;
     align-items: center;
+    margin-top: 20px;
 }
 
 .textarea {

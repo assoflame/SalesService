@@ -16,6 +16,7 @@ import ModalMessage from "../ModalMessage/ModalMessage"
 import Reviews from "../Reviews/Reviews";
 import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
 import ModalReview from "../ModalReview/ModalReview";
+import { isAdmin } from "../../helpers/auth";
 
 
 const Product = () => {
@@ -52,13 +53,14 @@ const Product = () => {
                                 <div>{`Опубликовано: ${new Date(product?.creationDate).toLocaleString()}`}</div>
                                 <Button callback={() => setMessageVisible(true)}>Написать продавцу</Button>
                             </div>
+                            {isAdmin() && <Button classNames={styles.blockUserButton}>Заблокировать пользователя</Button>}
                             <Modal visible={messageVisible} setVisible={setMessageVisible}>
                                 <ModalMessage sellerId={product?.userId} />
                             </Modal>
                         </div>
                     </div>
             }
-            <Reviews className={styles.reviews} userId={product.userId} key={product?.userId}/>
+            <Reviews className={styles.reviews} userId={product.userId} key={product?.userId} />
         </>
     )
 }

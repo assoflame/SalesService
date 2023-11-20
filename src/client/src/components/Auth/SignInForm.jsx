@@ -16,8 +16,9 @@ const SignInForm = () => {
     return (
         <form className={styles.form} onSubmit={async (e) => {
             e.preventDefault();
-            await signIn(form);
-            navigate(productsPage, {replace : true});
+            if(await signIn(form)){
+                navigate(productsPage, {replace : true});
+            }
         }}>
             <div className={styles.authInputs}>
                 <input className={styles.authInput} name="Email" placeholder='Почта' onChange={(e) => setForm({...form, email : e.target.value})}/>
