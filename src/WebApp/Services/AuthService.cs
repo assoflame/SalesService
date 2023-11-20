@@ -132,7 +132,7 @@ namespace Services
             _unitOfWork.Users.Update(_user);
             await _unitOfWork.SaveAsync();
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            return new TokenDto(_user.Id, accessToken, refreshToken);
+            return new TokenDto(accessToken, refreshToken);
         }
         private SigningCredentials GetSigningCredentials()
         {
@@ -145,7 +145,7 @@ namespace Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, _user.Email),
+                new Claim("Email", _user.Email),
                 new Claim("Status", _user.Status.ToString()),
                 new Claim("Id", _user.Id.ToString())
             };
