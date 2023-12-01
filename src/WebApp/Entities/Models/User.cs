@@ -17,8 +17,8 @@
         public DateTime RefreshTokenExpiryTime { get; set; }
 
         public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<UserRating> RatingsAsCustomer { get; set; }
-        public IEnumerable<UserRating> RatingsAsSeller { get; set; }
+        public IEnumerable<Review> ReviewsAsCustomer { get; set; }
+        public IEnumerable<Review> ReviewsAsSeller { get; set; }
         public IEnumerable<UserRole> Roles { get; set; }
         public IEnumerable<Chat> FirstChats { get; set; }
         public IEnumerable<Chat> SecondChats { get; set; }

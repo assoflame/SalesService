@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DataTransferObjects
 {
-    public record RatingCreationDto
+    public record ReviewCreationDto
     {
         [Required]
         [Range(1, 5)]

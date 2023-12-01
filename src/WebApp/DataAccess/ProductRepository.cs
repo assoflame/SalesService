@@ -62,6 +62,15 @@ namespace DataAccess
             return new PagedList<Product>(userProducts, count, productParameters.PageNumber, productParameters.PageSize);
         }
 
+        public async Task DeleteUserProducts(int userId)
+        {
+            DbContext.RemoveRange(
+                await FindByCondition(product => product.UserId == userId, trackChanges: true)
+                .ToListAsync());
+
+            await DbContext.SaveChangesAsync();
+        }
+
         public async Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges)
             => await FindByCondition(product => product.UserId == userId && product.Id == productId, trackChanges)
                 .Include(product => product.Images)

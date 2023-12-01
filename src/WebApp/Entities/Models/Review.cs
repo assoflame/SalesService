@@ -1,6 +1,6 @@
 ﻿namespace SalesService.Entities.Models
 {
-    public class UserRating
+    public class Review
     {
         public int UserWhoRatedId { get; set; }
         public int UserId { get; set; }

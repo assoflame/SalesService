@@ -71,6 +71,12 @@ namespace Services
                 _logger.LogError($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong password");
                 return false;
             }
+
+            if(_user.Status == UserStatus.Blocked)
+            {
+                return false;
+            }
+
             return true;
         }
 

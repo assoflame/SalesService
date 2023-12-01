@@ -14,6 +14,7 @@ namespace DataAccess.Interfaces
         Task<Product?> GetProductByIdAsync(int id, bool trackChanges);
         Task<PagedList<Product>> GetUserProductsAsync(
             int userId, ProductParameters productParameters, bool trackChanges);
+        Task DeleteUserProducts(int userId);
         Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges);
     }
 }

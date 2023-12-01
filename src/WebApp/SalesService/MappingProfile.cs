@@ -11,8 +11,8 @@ namespace Web
             CreateMap<User, UserDto>()
                 .ForCtorParam(nameof(UserDto.FullName),
                 opt => opt.MapFrom(u => string.Join(' ', u.FirstName, u.LastName)))
-                .ForCtorParam(nameof(UserDto.Ratings),
-                opt => opt.MapFrom(u => u.RatingsAsSeller.ToArray()));
+                .ForCtorParam(nameof(UserDto.Reviews),
+                opt => opt.MapFrom(u => u.ReviewsAsSeller.ToArray()));
 
             CreateMap<SignUpDto, User>();
 
@@ -37,9 +37,9 @@ namespace Web
 
             CreateMap<ProductImage, ProductImageDto>();
 
-            CreateMap<UserRating, RatingDto>()
-                .ForCtorParam(nameof(RatingDto.User),
-                opt => opt.MapFrom(userRating => userRating.UserWhoRated));
+            CreateMap<Review, ReviewDto>()
+                .ForCtorParam(nameof(ReviewDto.User),
+                opt => opt.MapFrom(userReview => userReview.UserWhoRated));
         }
     }
 }

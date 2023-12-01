@@ -32,7 +32,7 @@ namespace DataAccess
 
         public async Task<User?> GetUserByIdAsync(int id, bool trackChanges)
             => await FindByCondition(user => user.Id == id, trackChanges)
-                        .Include(user => user.RatingsAsSeller)
+                        .Include(user => user.ReviewsAsSeller)
                             .ThenInclude(ur => ur.UserWhoRated)
                     .FirstOrDefaultAsync();
                     

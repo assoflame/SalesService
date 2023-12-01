@@ -22,8 +22,8 @@ namespace Controllers
             _services = services;
         }
 
-        [HttpPost("{userId:int}/ratings")]
-        public async Task<IActionResult> RateUser(int userId, [FromBody] RatingCreationDto rateDto)
+        [HttpPost("{userId:int}/reviews")]
+        public async Task<IActionResult> RateUser(int userId, [FromBody] ReviewCreationDto rateDto)
         {
             if (rateDto is null)
                 return BadRequest("rate dto object is null");
@@ -85,19 +85,19 @@ namespace Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{userId:int}/ratings")]
-        public async Task<IActionResult> GetUserRatings(int userId, [FromQuery] RatingParameters ratingParams)
+        [HttpGet("{userId:int}/reviews")]
+        public async Task<IActionResult> GetUserReviews(int userId, [FromQuery] ReviewParams reviewParams)
         {
-            var ratingsWithMetaData = await _services
+            var reviewsWithMetaData = await _services
                 .UserService
-                .GetUserRatingsAsync(userId, ratingParams);
+                .GetUserReviewsAsync(userId, reviewParams);
 
             Response.Headers.Add("X-Pagination",
-                JsonSerializer.Serialize(ratingsWithMetaData.metaData));
+                JsonSerializer.Serialize(reviewsWithMetaData.metaData));
 
             Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
-            return Ok(ratingsWithMetaData.ratingsDto);
+            return Ok(reviewsWithMetaData.reviewsDto);
         }
     }
 }

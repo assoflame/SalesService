@@ -221,5 +221,10 @@ namespace Services
 
             await _unitOfWork.SaveAsync();
         }
+
+        public async Task DeleteUserProducts(int userId)
+        {
+            await _unitOfWork.Products.DeleteUserProducts(userId);
+        }
     }
 }

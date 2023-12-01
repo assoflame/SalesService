@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
-    public interface IUserRatingRepository : IGenericRepository<UserRating>
+    public interface IUserReviewRepository : IGenericRepository<Review>
     {
-        Task<PagedList<UserRating>> GetUserRatingsAsync(int userId, RatingParameters ratingParams, bool trackChanges);
+        Task<PagedList<Review>> GetUserReviewsAsync(int userId, ReviewParams reviewParams, bool trackChanges);
     }
 }

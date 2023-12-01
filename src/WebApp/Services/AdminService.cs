@@ -33,6 +33,9 @@ namespace Services
 
             user.Status = UserStatus.Blocked;
 
+            await _unitOfWork.Products
+                .DeleteUserProducts(userId);
+
             await _unitOfWork.SaveAsync();
         }
     }

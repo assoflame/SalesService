@@ -43,26 +43,26 @@ namespace Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<(IEnumerable<RatingDto> ratingsDto, MetaData metaData)>
-            GetUserRatingsAsync(int userId, RatingParameters ratingParams)
+        public async Task<(IEnumerable<ReviewDto> reviewsDto, MetaData metaData)>
+            GetUserReviewsAsync(int userId, ReviewParams reviewParams)
         {
-            var ratings = await _unitOfWork
-                .UserRatings
-                .GetUserRatingsAsync(userId, ratingParams, trackChanges: false);
+            var reviews = await _unitOfWork
+                .Reviews
+                .GetUserReviewsAsync(userId, reviewParams, trackChanges: false);
 
-            var ratingsDto = _mapper.Map<IEnumerable<RatingDto>>(ratings);
+            var reviewsDto = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
 
-            return (ratingsDto: ratingsDto, metaData: ratings.MetaData);
+            return (reviewsDto: reviewsDto, metaData: reviews.MetaData);
         }
 
-        public async Task RateUserAsync(int userWhoRateId, int userId, RatingCreationDto rateDto)
+        public async Task RateUserAsync(int userWhoRateId, int userId, ReviewCreationDto rateDto)
         {
             var seller = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
 
             if (seller is null)
                 throw new UserNotFoundException(userId);
 
-            var rating = new UserRating
+            var review = new Review
             {
                 UserWhoRatedId = userWhoRateId,
                 UserId = userId,
@@ -71,7 +71,7 @@ namespace Services
                 CreationDate = DateTime.UtcNow
             };
 
-            _unitOfWork.UserRatings.Create(rating);
+            _unitOfWork.Reviews.Create(review);
 
             await _unitOfWork.SaveAsync();
         }

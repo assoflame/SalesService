@@ -13,7 +13,7 @@ namespace DataAccess.Interfaces
         IProductImageRepository ProductImages { get; }
         IProductRepository Products { get; }
         IRoleRepository Roles { get; }
-        IUserRatingRepository UserRatings { get; }
+        IUserReviewRepository Reviews { get; }
         IUserRepository Users { get; }
         IUserRoleRepository UserRoles { get; }
 

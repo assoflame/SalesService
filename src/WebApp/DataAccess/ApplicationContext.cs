@@ -19,31 +19,37 @@ namespace DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Chat>()
+            modelBuilder
+                .Entity<Chat>()
                 .HasOne<User>(c => c.SecondUser)
                 .WithMany(u => u.SecondChats)
                 .HasForeignKey(c => c.SecondUserId);
 
-            modelBuilder.Entity<Chat>()
+            modelBuilder
+                .Entity<Chat>()
                 .HasOne<User>(c => c.FirstUser)
                 .WithMany(u => u.FirstChats)
                 .HasForeignKey(c => c.FirstUserId);
 
-            modelBuilder.Entity<UserRating>()
+            modelBuilder
+                .Entity<Review>()
                 .HasOne<User>(ur => ur.User)
-                .WithMany(u => u.RatingsAsSeller)
+                .WithMany(u => u.ReviewsAsSeller)
                 .HasForeignKey(ur => ur.UserId);
 
-            modelBuilder.Entity<UserRating>()
+            modelBuilder
+                .Entity<Review>()
                 .HasOne<User>(ur => ur.UserWhoRated)
-                .WithMany(u => u.RatingsAsCustomer)
+                .WithMany(u => u.ReviewsAsCustomer)
                 .HasForeignKey(ur => ur.UserWhoRatedId);
 
-            modelBuilder.Entity<UserRole>()
+            modelBuilder
+                .Entity<UserRole>()
                 .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
 
-            modelBuilder.Entity<UserRating>()
-                .HasKey(userRating => new { userRating.UserWhoRatedId, userRating.UserId });
+            modelBuilder
+                .Entity<Review>()
+                .HasKey(userReview => new { userReview.UserWhoRatedId, userReview.UserId });
 
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
         }
@@ -54,7 +60,7 @@ namespace DataAccess
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserRating> UserRatings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
     }

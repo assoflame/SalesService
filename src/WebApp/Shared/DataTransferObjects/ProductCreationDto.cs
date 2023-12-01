@@ -20,6 +20,7 @@ namespace Shared.DataTransferObjects
         public string Description { get; init; }
 
         [Required]
+        [Range(1, 10000000)]
         public decimal Price { get; init; }
 
         [ImageValidation]
