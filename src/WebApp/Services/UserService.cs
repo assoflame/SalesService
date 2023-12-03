@@ -26,7 +26,7 @@ namespace Services
         {
             var usersWithMetaData = await _unitOfWork
                 .Users
-                .GetAllUsersAsync(userParams, trackChanges: false);
+                .GetAllUsersAsync(userParams);
 
             var users = _mapper.Map<IEnumerable<UserDto>>(usersWithMetaData);
 
@@ -35,7 +35,7 @@ namespace Services
 
         public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = await _unitOfWork.Users.GetUserByIdAsync(id, trackChanges: false);
+            var user = await _unitOfWork.Users.GetUserByIdAsync(id);
 
             if (user is null)
                 throw new UserNotFoundException(id);
@@ -48,7 +48,7 @@ namespace Services
         {
             var reviews = await _unitOfWork
                 .Reviews
-                .GetUserReviewsAsync(userId, reviewParams, trackChanges: false);
+                .GetUserReviewsAsync(userId, reviewParams);
 
             var reviewsDto = _mapper.Map<IEnumerable<ReviewDto>>(reviews);
 
@@ -57,7 +57,7 @@ namespace Services
 
         public async Task RateUserAsync(int userWhoRateId, int userId, ReviewCreationDto rateDto)
         {
-            var seller = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
+            var seller = await _unitOfWork.Users.GetUserByIdAsync(userId);
 
             if (seller is null)
                 throw new UserNotFoundException(userId);

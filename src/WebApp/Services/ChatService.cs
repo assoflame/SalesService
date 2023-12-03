@@ -30,7 +30,7 @@ namespace Services
             GetUserChatsAsync(int userId, ChatParameters chatParams)
         {
             var chatsWithMetaData = await _unitOfWork.Chats
-                .GetUserChatsAsync(userId, chatParams, trackChanges: false);
+                .GetUserChatsAsync(userId, chatParams);
 
             var chatsDto = _mapper.Map<IEnumerable<ChatDto>>(chatsWithMetaData);
 
@@ -39,7 +39,7 @@ namespace Services
 
         public async Task<ChatDto> GetUserChatAsync(int userId, int chatId)
         {
-            var chat = await _unitOfWork.Chats.GetChatByIdAsync(chatId, trackChanges: false);
+            var chat = await _unitOfWork.Chats.GetChatByIdAsync(chatId);
 
             if (chat is null || (chat.FirstUserId != userId && chat.SecondUserId != userId))
                 throw new ChatNotFoundException(chatId);
@@ -49,13 +49,13 @@ namespace Services
 
         public async Task<MessageDto> SendMessageAsync(int userWhoSendsId, int userId, MessageCreationDto messageCreationDto)
         {
-            var user = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: false);
+            var user = await _unitOfWork.Users.GetUserByIdAsync(userId);
 
             if (user is null)
                 throw new UserNotFoundException(userId);
 
             var chat = await _unitOfWork.Chats
-                .GetChatByUsersAsync(userWhoSendsId, userId, trackChanges: false);
+                .GetChatByUsersAsync(userWhoSendsId, userId);
 
             if (chat is null)
             {

@@ -26,7 +26,7 @@ namespace Services
 
         public async Task BlockUser(int userId)
         {
-            var user = await _unitOfWork.Users.GetUserByIdAsync(userId, trackChanges: true);
+            var user = await _unitOfWork.Users.GetUserByIdAsync(userId);
 
             if (user == null)
                 throw new UserNotFoundException(userId);

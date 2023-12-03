@@ -10,6 +10,6 @@ namespace DataAccess.Interfaces
 {
     public interface IUserReviewRepository : IGenericRepository<Review>
     {
-        Task<PagedList<Review>> GetUserReviewsAsync(int userId, ReviewParams reviewParams, bool trackChanges);
+        Task<PagedList<Review>> GetUserReviewsAsync(int userId, ReviewParams reviewParams);
     }
 }

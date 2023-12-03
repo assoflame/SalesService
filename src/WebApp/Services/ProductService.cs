@@ -35,7 +35,7 @@ namespace Services
 
             var productsWithMetaData = await _unitOfWork
                 .Products
-                .GetAllProductsAsync(productParameters, trackChanges: false);
+                .GetAllProductsAsync(productParameters);
 
             var productsDto = _mapper.Map<IEnumerable<ProductDto>>(productsWithMetaData);
 
@@ -44,7 +44,7 @@ namespace Services
 
         public async Task<ProductDto> GetProductByIdAsync(int id)
         {
-            var product = await _unitOfWork.Products.GetProductByIdAsync(id, trackChanges: false);
+            var product = await _unitOfWork.Products.GetProductByIdAsync(id);
 
             if (product is null)
                 throw new ProductNotFoundException(id);
@@ -60,7 +60,7 @@ namespace Services
 
             var userProductsWithMetaData = await _unitOfWork
                 .Products
-                .GetUserProductsAsync(userId, productParameters, trackChanges: false);
+                .GetUserProductsAsync(userId, productParameters);
 
             var productsDto = _mapper.Map<IEnumerable<ProductDto>>(userProductsWithMetaData);
 
@@ -70,7 +70,7 @@ namespace Services
         public async Task DeleteProductAsync(int productId)
         {
             var product = await _unitOfWork.Products
-                .GetProductByIdAsync(productId, trackChanges: true);
+                .GetProductByIdAsync(productId);
 
             if (product is null)
                 throw new ProductNotFoundException(productId);
@@ -100,7 +100,7 @@ namespace Services
         public async Task UpdateProductAsync(int userId, int productId, ProductUpdateDto productForUpdateDto)
         {
             var product = await _unitOfWork.Products
-                .GetProductByIdAsync(productId, trackChanges: true);
+                .GetProductByIdAsync(productId);
 
             if (product is null || userId != product.UserId)
                 throw new ProductNotFoundException(productId);
@@ -117,7 +117,7 @@ namespace Services
         public async Task<ProductDto> SellProductAsync(int userId, int productId)
         {
             var product = await _unitOfWork.Products
-                .GetUserProductAsync(userId, productId, trackChanges: true);
+                .GetUserProductAsync(userId, productId);
 
             if (product is null)
                 throw new ProductNotFoundException(productId);
@@ -135,7 +135,7 @@ namespace Services
         {
             var product = await _unitOfWork
                 .Products
-                .GetProductByIdAsync(productId, trackChanges: false);
+                .GetProductByIdAsync(productId);
 
             if (product is null || product.UserId != userId)
                 throw new ProductNotFoundException(productId);
@@ -196,7 +196,7 @@ namespace Services
         {
             var photos = await _unitOfWork
                 .ProductImages
-                .GetProductPhotosAsync(productId, trackChanges: false);
+                .GetProductPhotosAsync(productId);
 
             return _mapper.Map<IEnumerable<ProductImageDto>>(photos);
         }
@@ -205,14 +205,14 @@ namespace Services
         {
             var product = await _unitOfWork
                 .Products
-                .GetProductByIdAsync(productId, trackChanges: false);
+                .GetProductByIdAsync(productId);
 
             if (product is null || product.UserId != userId)
                 throw new ProductNotFoundException(productId);
 
             var photos = await _unitOfWork
                 .ProductImages
-                .GetProductPhotosAsync(productId, trackChanges: true);
+                .GetProductPhotosAsync(productId);
 
             foreach (var photo in photos)
                 File.Delete(photo.Path);

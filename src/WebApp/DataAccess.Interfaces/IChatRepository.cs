@@ -10,8 +10,8 @@ namespace DataAccess.Interfaces
 {
     public interface IChatRepository : IGenericRepository<Chat>
     {
-        Task<PagedList<Chat>> GetUserChatsAsync(int userId, ChatParameters requsetParams,bool trackChanges);
-        Task<Chat?> GetChatByIdAsync(int chatId, bool trackChanges);
-        Task<Chat?> GetChatByUsersAsync(int sellerId, int customerId, bool trackChanges);
+        Task<PagedList<Chat>> GetUserChatsAsync(int userId, ChatParameters requsetParams);
+        Task<Chat?> GetChatByIdAsync(int chatId);
+        Task<Chat?> GetChatByUsersAsync(int sellerId, int customerId);
     }
 }

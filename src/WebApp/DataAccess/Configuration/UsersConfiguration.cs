@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Configuration
 {
-    internal class UsersConfiguration : IEntityTypeConfiguration<User>
+    public class UsersConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
@@ -17,6 +17,7 @@ namespace DataAccess.Configuration
                 (
                     new User()
                     {
+                        Id = 1,
                         Email = "admin@gmail.com",
                         FirstName = "admin",
                         LastName = "admin",
@@ -25,7 +26,20 @@ namespace DataAccess.Configuration
                         PasswordHash = "93C7076CD06276AA3B40BABBD75787D9",
                         PasswordSalt = "adminadmin"
 
-                        // admin password = "SUPERUSER"
+                        // password = "SUPERUSER"
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Email = "test@gmail.com",
+                        FirstName = "test",
+                        LastName = "user",
+                        City = "Kazan",
+                        Age = 20,
+                        PasswordHash = "237B99991325536F9735CAED4B785E30",
+                        PasswordSalt = "testuser"
+
+                        // password = "test"
                     }
                 );
         }

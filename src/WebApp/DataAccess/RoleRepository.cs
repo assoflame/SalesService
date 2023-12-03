@@ -13,8 +13,8 @@ namespace DataAccess
     {
         public RoleRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<Role> GetByNameAsync(string name, bool trackChanges)
-            => await FindByCondition(role => role.Name == name, trackChanges)
+        public async Task<Role?> GetByNameAsync(string name)
+            => await dbContext.Roles.Where(role => role.Name == name)
                 .FirstOrDefaultAsync();
     }
 }

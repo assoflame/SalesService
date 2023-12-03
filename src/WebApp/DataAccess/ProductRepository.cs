@@ -16,18 +16,18 @@ namespace DataAccess
         public ProductRepository(ApplicationContext context) : base(context) { }
 
         public async Task<PagedList<Product>> GetAllProductsAsync(
-            ProductParameters productParameters, bool trackChanges)
+            ProductParameters productParameters)
         {
-            var products = await FindAll(trackChanges)
+            var products = await dbContext.Products
                 .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
                 .Search(productParameters?.SearchString)
-                .Sort(productParameters.OrderBy)
+                .Sort(productParameters.OrderBy!)
                 .Include(product => product.Images)
                 .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
                 .Take(productParameters.PageSize)
                 .ToListAsync();
 
-            var count = await FindAll(trackChanges: false)
+            var count = await dbContext.Products
                 .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
                 .Search(productParameters.SearchString)
                 .CountAsync();
@@ -36,17 +36,16 @@ namespace DataAccess
                 (products, count, productParameters.PageNumber, productParameters.PageSize);
         }
 
-        public async Task<Product?> GetProductByIdAsync(int id, bool trackChanges)
-            => await FindByCondition(product => product.Id == id, trackChanges)
+        public async Task<Product?> GetProductByIdAsync(int id)
+            => await dbContext.Products.Where(product => product.Id == id)
                 .Include(product => product.Images)
                 .FirstOrDefaultAsync();
 
         public async Task<PagedList<Product>> GetUserProductsAsync(
             int userId,
-            ProductParameters productParameters,
-            bool trackChanges)
+            ProductParameters productParameters)
         {
-            var userProducts = await FindByCondition(product => product.UserId == userId, trackChanges)
+            var userProducts = await dbContext.Products.Where(product => product.UserId == userId)
                 .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
                 .Search(productParameters.SearchString)
                 .Include(product => product.Images)
@@ -54,7 +53,7 @@ namespace DataAccess
                 .Take(productParameters.PageSize)
                 .ToListAsync();
 
-            var count = await FindByCondition(product => product.UserId == userId, trackChanges: false)
+            var count = await dbContext.Products.Where(product => product.UserId == userId)
                 .FilterByPrice(productParameters.MinPrice, productParameters.MaxPrice)
                 .Search(productParameters.SearchString)
                 .CountAsync();
@@ -64,15 +63,15 @@ namespace DataAccess
 
         public async Task DeleteUserProducts(int userId)
         {
-            DbContext.RemoveRange(
-                await FindByCondition(product => product.UserId == userId, trackChanges: true)
+            dbContext.RemoveRange(
+                await dbContext.Products.Where(product => product.UserId == userId)
                 .ToListAsync());
 
-            await DbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Product?> GetUserProductAsync(int userId, int productId, bool trackChanges)
-            => await FindByCondition(product => product.UserId == userId && product.Id == productId, trackChanges)
+        public async Task<Product?> GetUserProductAsync(int userId, int productId)
+            => await dbContext.Products.Where(product => product.UserId == userId && product.Id == productId)
                 .Include(product => product.Images)
                 .FirstOrDefaultAsync();
     }

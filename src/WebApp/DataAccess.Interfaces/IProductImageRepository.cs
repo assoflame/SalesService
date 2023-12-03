@@ -11,6 +11,6 @@ namespace DataAccess.Interfaces
     {
         void CreateRange(IEnumerable<ProductImage> productImages);
         void DeleteRange(IEnumerable<ProductImage> productImage);
-        Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId, bool trackChanges);
+        Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId);
     }
 }

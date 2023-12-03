@@ -20,7 +20,7 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
 
-        private User _user;
+        private User? _user;
 
         public AuthService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger,
             IConfiguration configuration)
@@ -40,7 +40,7 @@ namespace Services
 
             _unitOfWork.Users.Create(user);
 
-            var role = await _unitOfWork.Roles.GetByNameAsync("user", trackChanges: false);
+            var role = await _unitOfWork.Roles.GetByNameAsync("user");
 
             _unitOfWork.UserRoles.Create( new UserRole
                 {
@@ -55,7 +55,7 @@ namespace Services
         public async Task<bool> ValidateUserAsync(SignInDto userForSignInDto)
         {
             _user = await _unitOfWork.Users
-                .GetUserByEmailAsync(userForSignInDto.Email, trackChanges: false);
+                .GetUserByEmailAsync(userForSignInDto.Email);
 
             if (_user == null)
             {
@@ -189,7 +189,7 @@ namespace Services
             var userEmail = principal?.FindFirst(ClaimTypes.Email)?.Value;
 
             var user = await _unitOfWork.Users
-                .GetUserByEmailAsync(userEmail, trackChanges: true);
+                .GetUserByEmailAsync(userEmail);
 
             if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
                    user.RefreshTokenExpiryTime < DateTime.Now)

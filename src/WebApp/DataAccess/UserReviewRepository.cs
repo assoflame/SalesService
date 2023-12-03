@@ -14,16 +14,16 @@ namespace DataAccess
     {
         public UserReviewRepository(ApplicationContext context) : base(context) { }
 
-        public async Task<PagedList<Review>> GetUserReviewsAsync(int userId, ReviewParams reviewParams, bool trackChanges)
+        public async Task<PagedList<Review>> GetUserReviewsAsync(int userId, ReviewParams reviewParams)
         {
-            var userReviews = await FindByCondition(userReview => userReview.UserId == userId, trackChanges)
+            var userReviews = await dbContext.Reviews.Where(userReview => userReview.UserId == userId)
                 .Include(userReview => userReview.UserWhoRated)
                 .OrderByDescending(userReview => userReview.CreationDate)
                 .Skip((reviewParams.PageNumber - 1) * reviewParams.PageSize)
                 .Take(reviewParams.PageSize)
                 .ToListAsync();
 
-            var count = await FindByCondition(userReview => userReview.UserId == userId, trackChanges: false)
+            var count = await dbContext.Reviews.Where(userReview => userReview.UserId == userId)
                 .CountAsync();
 
             return new PagedList<Review>(userReviews, count, reviewParams.PageNumber, reviewParams.PageSize);

@@ -13,6 +13,7 @@ namespace DataAccess
     {
         public ApplicationContext(DbContextOptions options) : base(options)
         {
+            this.Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,6 +53,7 @@ namespace DataAccess
                 .HasKey(userReview => new { userReview.UserWhoRatedId, userReview.UserId });
 
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
+            modelBuilder.ApplyConfiguration(new UsersConfiguration());
         }
 
         public DbSet<Chat> Chats { get; set; }

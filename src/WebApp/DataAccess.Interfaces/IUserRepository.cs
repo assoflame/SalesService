@@ -12,8 +12,8 @@ namespace DataAccess.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task<PagedList<User>> GetAllUsersAsync(UserParameters userParams, bool trackChanges);
-        Task<User?> GetUserByIdAsync(int id, bool trackChanges);
-        Task<User?> GetUserByEmailAsync(string email, bool trackChanges);
+        Task<PagedList<User>> GetAllUsersAsync(UserParameters userParams);
+        Task<User?> GetUserByIdAsync(int id);
+        Task<User?> GetUserByEmailAsync(string email);
     }
 }

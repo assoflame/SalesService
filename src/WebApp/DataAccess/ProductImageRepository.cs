@@ -14,17 +14,18 @@ namespace DataAccess
         public ProductImageRepository(ApplicationContext context) : base(context) { }
 
         public void CreateRange(IEnumerable<ProductImage> productImages)
-            => DbContext.AddRange(productImages);
+            => dbContext.AddRange(productImages);
 
-        public async Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId, bool trackChanges)
+        public async Task<IEnumerable<ProductImage>> GetProductPhotosAsync(int productId)
         {
-            var photos = await FindByCondition(photo => photo.ProductId == productId, trackChanges)
+            var photos = await dbContext.ProductImages
+                .Where(photo => photo.ProductId == productId)
                 .ToListAsync();
 
             return photos;
         }
 
         public void DeleteRange(IEnumerable<ProductImage> productImages)
-            => DbContext.RemoveRange(productImages);
+            => dbContext.RemoveRange(productImages);
     }
 }
