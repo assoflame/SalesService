@@ -32,12 +32,12 @@ namespace DataAccess.Configuration
                     {
                         Id = 2,
                         Email = "test@gmail.com",
-                        FirstName = "test",
-                        LastName = "user",
+                        FirstName = "test_user",
+                        LastName = "test",
                         City = "Kazan",
                         Age = 20,
                         PasswordHash = "237B99991325536F9735CAED4B785E30",
-                        PasswordSalt = "testuser"
+                        PasswordSalt = "test_usertest"
 
                         // password = "test"
                     }

@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Tests
 {
@@ -19,9 +20,9 @@ namespace Tests
             _factory = factory;
         }
 
-        private async Task<FactoryClients> GetFactoryClients()
+        private async Task<Clients> GetCLients()
         {
-            var clients = new FactoryClients()
+            var clients = new Clients()
             {
                 UnauthorizedClient = _factory.CreateClient(),
                 AuthorizedClient = _factory.CreateClient(),
@@ -49,12 +50,33 @@ namespace Tests
         }
 
         [Fact]
+        public async Task GetProducts()
+        {
+            // Arrange
+            var unauthorizedClient = (await GetCLients()).UnauthorizedClient;
+
+            // Act
+
+            var response = await unauthorizedClient
+                .GetAsync("api/products");
+
+            // Assert
+
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var content = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<List<ProductDto>>(await response.Content.ReadAsStringAsync());
+            Assert.NotNull(content);
+            Assert.True(response.Headers.Contains("X-Pagination"));
+        }
+
+        [Fact]
         public async Task GetProduct_NotFound()
         {
             // Arrange
 
             var incorrectProductId = -1;
-            var unauthorizedClient = (await GetFactoryClients()).UnauthorizedClient;
+            var unauthorizedClient = (await GetCLients()).UnauthorizedClient;
 
             // Act
 
@@ -68,11 +90,31 @@ namespace Tests
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+
+        [Fact]
+        public async Task GetExistingProduct()
+        {
+            // Arrange
+            var unauthorizedClient = (await GetCLients()).UnauthorizedClient;
+            int productId = 1;
+
+            // Act
+            var response = await unauthorizedClient
+                .GetAsync($"api/products/{productId}");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var content = Newtonsoft.Json.JsonConvert
+                .DeserializeObject<ProductDto>(await response.Content.ReadAsStringAsync());
+            Assert.NotNull(content);
+            Assert.Equal(productId, content.Id);
+        }
+
         [Fact]
         public async Task CreateValidProduct()
         {
             // Arrange
-            var authorizedClient = (await GetFactoryClients()).AdminClient;
+            var authorizedClient = (await GetCLients()).AuthorizedClient;
             var formData = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string> ("Name", "New Product"),
@@ -97,7 +139,7 @@ namespace Tests
         public async Task CreateInvalidProduct()
         {
             // Arrange
-            var authorizedClient = (await GetFactoryClients()).AdminClient;
+            var authorizedClient = (await GetCLients()).AuthorizedClient;
             var formData = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string> ("Name", "New Product"),
@@ -112,6 +154,70 @@ namespace Tests
             // Assert
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateExistingProduct_ByOwner()
+        {
+            // Arrange
+            var authorizedClient = (await GetCLients()).AuthorizedClient;
+            int productId = 2;
+            var productUpdateDto = new ProductUpdateDto
+            {
+                Name = "new name",
+                Description = "new desctiption",
+                Price = 999
+            };
+
+            // Act
+            var response = await authorizedClient
+                .PutAsJsonAsync($"api/products/{productId}", productUpdateDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+        }
+
+        [Fact]
+        public async Task UpdateExistingProduct_ByOtherUser()
+        {
+            // Arrange
+            var authorizedClient = (await GetCLients()).AuthorizedClient;
+            int productId = 1;
+            var productUpdateDto = new ProductUpdateDto
+            {
+                Name = "new name",
+                Description = "new description",
+                Price = 999
+            };
+
+            // Act
+            var response = await authorizedClient
+                .PutAsJsonAsync($"api/products/{productId}", productUpdateDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateNotExistingProduct()
+        {
+            // Arrange
+            var authorizedClient = (await GetCLients()).AuthorizedClient;
+            int productId = -1;
+            var productUpdateDto = new ProductUpdateDto
+            {
+                Name = "new name",
+                Description = "new description",
+                Price = 999
+            };
+
+            // Act
+            var response = await authorizedClient
+                .PutAsJsonAsync($"api/products/{productId}", productUpdateDto);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

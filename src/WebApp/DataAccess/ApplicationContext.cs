@@ -54,6 +54,7 @@ namespace DataAccess
 
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductsConfiguration());
         }
 
         public DbSet<Chat> Chats { get; set; }

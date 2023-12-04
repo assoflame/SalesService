@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tests
 {
-    public class FactoryClients
+    public class Clients
     {
         public HttpClient UnauthorizedClient { get; set; }
         public HttpClient AuthorizedClient { get; set; }
