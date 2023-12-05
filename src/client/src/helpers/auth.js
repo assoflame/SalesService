@@ -11,19 +11,18 @@ export const signIn = async (signInDto) => {
 
   if (response.ok) {
     const result = await response.json();
-    const payload = JSON.parse(atob(result.token.accessToken.split('.')[1]));
+    const payload = JSON.parse(atob(result.accessToken.split('.')[1]));
 
-    console.log(payload);
-    const exp = new Date(payload.exp * 1000).toUTCString();
-
+    console.log(new Date(payload.exp * 1000).toUTCString());
     localStorage.setItem('id', payload.Id);
     localStorage.setItem('isAdmin', payload.role.includes('admin'));
 
-    document.cookie = `accessToken=${result.token.accessToken}; path=/; expires=${exp}`;
+    document.cookie = `token=${JSON.stringify(result)}; path=/;`;
+
     console.log('success sign in');
     return true;
   }
-  
+
   console.log(response.error);
   console.log("sign in error");
   return false;
@@ -46,25 +45,52 @@ export const signUp = async (signUpDto) => {
   }
 }
 
-export const getAccessToken = () => {
-  let cookies = document.cookie.split('; ');
-  for (let i = 0; i < cookies.length; ++i) {
-    if (cookies[i].startsWith('accessToken')) {
-      return cookies[i].split('=')[1];
-    }
-  }
-
-  return '';
-}
-
 export const logout = () => {
-  document.cookie = `accessToken=; path=/; expires=${new Date(Date.now()).toUTCString()}`;
+  document.cookie = `token=; path=/; expires=${new Date(Date.now()).toUTCString()}`;
+  localStorage.removeItem('id');
 }
 
 export const loggedIn = () => {
-  return getAccessToken() !== '';
+  return localStorage.getItem('id');
 }
 
 export const isAdmin = () => {
   return localStorage.getItem('isAdmin') === 'true';
+}
+
+export const getAccessToken = async () => {
+  let cookies = document.cookie.split('; ');
+  for (let i = 0; i < cookies.length; ++i) {
+    if (cookies[i].startsWith('token')) {
+      const token = JSON.parse(cookies[i].slice('token'.length + 1));
+      const payload = JSON.parse(atob(token.accessToken.split('.')[1]));
+      const expTime = new Date(payload.exp * 1000).toUTCString();
+
+      if (new Date(Date.now()).toUTCString() >= expTime) {
+        return await getNewToken(token);
+      }
+
+      return token.accessToken;
+    }
+
+    return '';
+  }
+}
+
+const getNewToken = async (token) => {
+  const response = await fetch(`${api}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(token)
+  });
+
+  if (response.ok) {
+    const result = await response.json();
+    document.cookie = `token=${JSON.stringify(result)}; path=/;`;
+    return result.accessToken;
+  }
+
+  return '';
 }

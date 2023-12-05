@@ -6,7 +6,6 @@ import SignUp from './pages/SignUp';
 import Messages from './pages/Messages/Messages';
 import RequireAuth from './components/Auth/RequireAuth'
 import Product from './components/Product/Product'
-import { useState } from 'react';
 
 function App() {
   return (

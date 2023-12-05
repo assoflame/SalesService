@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./ProductCard.module.css"
 import { server } from "../../helpers/shared"
 import { isAdmin } from "../../helpers/auth";
 import Button from "../UI/Button/Button"
-
+import { deleteProduct } from "../../helpers/products";
+import { Link } from "react-router-dom";
+import Modal from "../UI/Modal/Modal";
+import ProductUpdateForm from "./ProductUpdateForm"
 
 
 const ProductCard = ({ product }) => {
@@ -20,20 +23,32 @@ const ProductCard = ({ product }) => {
             : product.description;
     }
 
+    const [productUpdateVisible, setProductUpdateVisible] = useState(false);
+
     return (
         <div className={styles.card}>
+            <Link className={styles.link} to={`/products/${product.id}`}>
                 <img className={styles.image} src={getImagePath()} alt="" />
-            <div className={styles.info}>
-                <div className={styles.firstInfo}>
-                    <div className={styles.name}>{product.name}</div>
-                    <div className={styles.desctiption}>{getDescription()}</div>
+                <div className={styles.info}>
+                    <div className={styles.firstInfo}>
+                        <div className={styles.name}>{product.name}</div>
+                        <div className={styles.desctiption}>{getDescription()}</div>
+                    </div>
+                    <div className={styles.secondInfo}>
+                        <div className={styles.price}>Цена: {product.price + ' руб.'}</div>
+                        <div className={styles.datetime}>{new Date(product.creationDate).toLocaleString()}</div>
+                    </div>
                 </div>
-                <div className={styles.secondInfo}>
-                    <div className={styles.price}>Цена: {product.price + ' руб.'}</div>
-                    <div className={styles.datetime}>{new Date(product.creationDate).toLocaleString()}</div>
-                </div>
-                    {isAdmin() && <Button classNames={styles.deleteButton}>Удалить продукт</Button>}
-            </div>
+            </Link>
+            {localStorage["id"] == product.userId &&
+                <Button classNames={styles.updateButton} callback={() => setProductUpdateVisible(true)} >Изменить продукт</Button>}
+
+            {(isAdmin() || localStorage["id"] == product.userId) && <Button classNames={styles.deleteButton}
+                callback={async () => { await deleteProduct(product.id); window.location.reload(); }}>Удалить продукт</Button>}
+
+            <Modal visible={productUpdateVisible} setVisible={setProductUpdateVisible}>
+                <ProductUpdateForm product={product}/>
+            </Modal>
         </div>
     )
 }

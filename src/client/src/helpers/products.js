@@ -2,22 +2,22 @@ import { getAccessToken } from "./auth";
 import { createQuery, api } from "./shared";
 
 export const getProducts = async (filter) => {
-    let query = createQuery(`${api}/products`, filter);
-    let response = await fetch(query);
+  let query = createQuery(`${api}/products`, filter);
+  let response = await fetch(query);
 
-    if(response.ok) {
-      return response;
-    } else {
-      console.log("get products error");
-    }
+  if (response.ok) {
+    return response;
+  } else {
+    console.log("get products error");
+  }
 
-    return [];
+  return [];
 }
 
 export const getProductById = async (productId) => {
   let response = await fetch(`${api}/products/${productId}`);
 
-  if(response.ok) {
+  if (response.ok) {
     let product = await response.json();
     console.log(product);
     return product;
@@ -27,8 +27,6 @@ export const getProductById = async (productId) => {
 }
 
 export const createProduct = async (product) => {
-  console.log(getAccessToken());
-  console.log(product);
   let formData = new FormData();
   formData.append('Name', product.name);
   formData.append('Description', product.description);
@@ -39,24 +37,25 @@ export const createProduct = async (product) => {
 
   let response = await fetch(`${api}/products`, {
     method: "POST",
-    headers: {
-      'Authorization' : `Bearer ${getAccessToken()}`
+    headers : {
+      'Authorization' : `Bearer ${await getAccessToken()}`
     },
     body: formData
   });
 
-  if(response.ok) {
+  if (response.ok) {
     console.log('success product creation');
-  } else {
-    console.log('product creation error');
+    return true;
   }
+  console.log('product creation error');
+  return false;
 }
 
-export const getUserRatings = async (id, queryParams) => {
-  let query = createQuery(`${api}/users/${id}/ratings`, queryParams);
+export const getUserReviews = async (id, queryParams) => {
+  let query = createQuery(`${api}/users/${id}/reviews`, queryParams);
   let response = await fetch(query);
 
-  if(response.ok) {
+  if (response.ok) {
     console.log('success user ratings fetch');
     return response;
   } else {
@@ -64,4 +63,39 @@ export const getUserRatings = async (id, queryParams) => {
   }
 
   return [];
+}
+
+export const deleteProduct = async (productId) => {
+  const response = await fetch(`${api}/products/${productId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type" : "application/json",
+      'Authorization' : `Bearer ${await getAccessToken()}`
+    },
+  });
+
+  if (response.ok) {
+    console.log('delete product by admin success');
+  } else {
+    console.log('delete product by admin error');
+  }
+}
+
+export const updateProduct = async (productId, productUpdateDto) => {
+  const response = await fetch(`${api}/products/${productId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type" : "application/json",
+      'Authorization' : `Bearer ${await getAccessToken()}`
+    },
+    body: JSON.stringify(productUpdateDto)
+  });
+
+  if (response.ok) {
+    console.log('update product success');
+    return true;
+  }
+  console.log('update product error');
+
+  return false;
 }

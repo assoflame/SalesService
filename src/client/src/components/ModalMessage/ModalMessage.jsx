@@ -10,9 +10,10 @@ const ModalMessage = ({ sellerId }) => {
 
     return (
         <form className={styles.form}
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault();
-                sendMessage(sellerId, {body: message});
+                if(await sendMessage(sellerId, {body: message}))
+                    window.location.reload();
             }}>
             <textarea placeholder='Сообщение...' className={styles.textarea}
                 onChange={(e) => setMessage(e.target.value)}/>

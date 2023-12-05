@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { signIn, signUp } from "../../helpers/auth";
 import styles from "./AuthForm.module.css"
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
     const [form, setForm] = useState({
@@ -33,6 +33,7 @@ const SignUpForm = () => {
             </div>
             <div className={styles.authButtons}>
                 <button className={styles.authButton} type="submit">Создать аккаунт</button>
+                <NavLink className={styles.link} to="/signin">Войти в аккаунт</NavLink>
             </div>
         </form>
     )

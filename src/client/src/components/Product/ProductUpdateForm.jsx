@@ -1,25 +1,23 @@
 import React, { useState } from "react";
-import { createProduct } from "../../helpers/products";
+import { updateProduct } from "../../helpers/products";
 import styles from "./ProductCreationForm.module.css"
 import Button from "../UI/Button/Button"
-import FilesInput from "../UI/FilesInput/FilesInput";
 
 
-const ProductCreationForm = () => {
+const ProductCreationForm = ({product}) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
-    const [images, setImages] = useState([]);
 
     return (
         <form id={styles.form} onSubmit={async e => {
             e.preventDefault();
-            if (await createProduct({
-                name,
-                description,
-                price,
-                images
-            }))
+            if (await updateProduct(product.id,
+                {
+                    name,
+                    description,
+                    price
+                }))
                 window.location.reload();
         }}>
             <div className={styles.inputs}>
@@ -27,9 +25,8 @@ const ProductCreationForm = () => {
                 <textarea className={styles.textarea} onChange={e => setDescription(e.target.value)} name="Description" placeholder="Описание товара" />
                 <input className={styles.input} onChange={e => setPrice(e.target.value)} name="Price" placeholder="Цена" />
             </div>
-            <FilesInput uploadedFiles={images} setUploadedFiles={setImages} />
             <Button classNames={styles.button}>
-                Создать товар
+                Изменить товар
             </Button>
         </form>
     )

@@ -10,7 +10,7 @@ export const getChats = async (queryParams) => {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         }
     });
 
@@ -29,7 +29,7 @@ export const getChatById = async (id) => {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         }
     });
 
@@ -47,16 +47,17 @@ export const sendMessage = async (userId, message) => {
         method: 'POST',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         },
         body: JSON.stringify(message)
     });
 
     if(response.ok) {
         console.log('send message success');
-    } else {
-        console.log('send message error');
+        return true;
     }
+    console.log('send message error');
+    return false;
 }
 
 export const getLastMessageTime = (message) => {

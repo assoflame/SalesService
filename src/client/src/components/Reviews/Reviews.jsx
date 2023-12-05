@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUserRatings } from "../../helpers/products";
+import { getUserReviews } from "../../helpers/products";
 import { usePagination } from "../../hooks/usePagination";
 import { useFetching } from "../../hooks/useFetching";
 import { getPagesCount } from "../../helpers/shared";
@@ -23,7 +23,7 @@ const Reviews = ({ className, userId }) => {
     const [reviewVisible, setReviewVisible] = useState(false);
 
     const [fetchReviews, isReviewsLoading, fetchReviewsError] = useFetching(async () => {
-        let response = await getUserRatings(userId, queryParams);
+        let response = await getUserReviews(userId, queryParams);
         setReviews([...await response.json()]);
         let totalCount = JSON.parse(response.headers.get("X-Pagination")).TotalCount;
         console.log(JSON.parse(response.headers.get("X-Pagination")));

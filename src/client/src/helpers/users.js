@@ -6,7 +6,7 @@ export const getUser = async (id) => {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         }
     });
 
@@ -24,7 +24,7 @@ export const getUsers = async () => {
         method : 'GET',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         }
     });
 
@@ -39,11 +39,11 @@ export const getUsers = async () => {
 }
 
 export const sendReview = async (userId, review) => {
-    let response = await fetch(`${api}/users/${userId}/ratings`, {
+    let response = await fetch(`${api}/users/${userId}/reviews`, {
         method : 'POST',
         headers : {
             "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${getAccessToken()}`
+            'Authorization' : `Bearer ${await getAccessToken()}`
         },
         body: JSON.stringify(review)
     });

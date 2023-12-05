@@ -1,7 +1,15 @@
 .card {
     display: flex;
+    flex-direction: column;
     width: 100%;
     border-bottom: 2px solid #222831;
+    padding-bottom: 10px;
+    align-items: center;
+}
+
+.link {
+    display: flex;
+    width: 100%;
 }
 
 .image {
@@ -32,6 +40,10 @@
 }
 
 .deleteButton {
-    width: 30%;
-    align-self: center;
+    align-self: flex-end;
+    margin-top: 10px;
+}
+
+.updateButton {
+    align-self: flex-end;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./FilesInput.module.css"
 import Button from "../Button/Button";
 

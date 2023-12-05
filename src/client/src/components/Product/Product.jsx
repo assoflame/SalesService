@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById, getUserRatings } from "../../helpers/products";
-import { getPagesCount, server } from "../../helpers/shared";
-import { usePagination } from "../../hooks/usePagination";
+import { getProductById } from "../../helpers/products";
 import { useFetching } from "../../hooks/useFetching";
 import Loader from "../UI/Loader/Loader";
 import Images from "./Images";
@@ -14,9 +12,8 @@ import Button from "../UI/Button/Button";
 import Modal from "../UI/Modal/Modal"
 import ModalMessage from "../ModalMessage/ModalMessage"
 import Reviews from "../Reviews/Reviews";
-import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
-import ModalReview from "../ModalReview/ModalReview";
 import { isAdmin } from "../../helpers/auth";
+import { blockUser } from "../../helpers/admin";
 
 
 const Product = () => {
@@ -41,26 +38,34 @@ const Product = () => {
             {
                 isProductLoading
                     ? <div className={styles.loaderContainer}><Loader /></div>
-                    : <div className={styles.productContainer}>
-                        <Images className={styles.images} imagePaths={product?.imagePaths} />
-                        <div className={styles.productInfoContainer}>
-                            <div className={styles.firstInfo}>
-                                <div id={styles.name}>{product?.name}</div>
-                                <div id={styles.description}>Описание: {product?.description}</div>
+                    : Object.entries(product).length > 0 &&
+                    <div>
+                        <div className={styles.productContainer}>
+                            <Images className={styles.images} imagePaths={product?.imagePaths} />
+                            <div className={styles.productInfoContainer}>
+                                <div className={styles.firstInfo}>
+                                    <div id={styles.name}>{product?.name}</div>
+                                    <div id={styles.description}>Описание: {product?.description}</div>
+                                </div>
+                                <div className={styles.secondInfo}>
+                                    <div id={styles.price}>{`${product?.price} руб.`}</div>
+                                    <div>{`Опубликовано: ${new Date(product?.creationDate).toLocaleString()}`}</div>
+                                    {product.userId != localStorage['id'] &&
+                                        <Button callback={() => setMessageVisible(true)}>Написать продавцу</Button>}
+                                </div>
+                                {isAdmin() && product.userId != localStorage['id'] &&
+                                    <Button classNames={styles.blockUserButton}
+                                        callback={() => blockUser(product.userId)}>Заблокировать пользователя
+                                    </Button>}
+                                <Modal visible={messageVisible} setVisible={setMessageVisible}>
+                                    <ModalMessage sellerId={product?.userId} />
+                                </Modal>
                             </div>
-                            <div className={styles.secondInfo}>
-                                <div id={styles.price}>{`${product?.price} руб.`}</div>
-                                <div>{`Опубликовано: ${new Date(product?.creationDate).toLocaleString()}`}</div>
-                                <Button callback={() => setMessageVisible(true)}>Написать продавцу</Button>
-                            </div>
-                            {isAdmin() && <Button classNames={styles.blockUserButton}>Заблокировать пользователя</Button>}
-                            <Modal visible={messageVisible} setVisible={setMessageVisible}>
-                                <ModalMessage sellerId={product?.userId} />
-                            </Modal>
                         </div>
+                        <Reviews className={styles.reviews} userId={product.userId} key={product?.userId} />
                     </div>
             }
-            <Reviews className={styles.reviews} userId={product.userId} key={product?.userId} />
+            {fetchProductError && <div className={styles.error}>Ошибка загрузки продукта</div>}
         </>
     )
 }
