@@ -143,5 +143,19 @@ namespace Controllers
 
             return BadRequest();
         }
+
+        [Authorize]
+        [HttpDelete("{productId:int}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            if (int.TryParse(HttpContext?.User.FindFirst("Id")?.Value, out var userId))
+            {
+                await _services.ProductService.DeleteProductAsync(productId, userId);
+
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
     }
 }

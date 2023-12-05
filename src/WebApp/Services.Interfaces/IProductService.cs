@@ -14,7 +14,7 @@ namespace Services.Interfaces
         Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetAllProductsAsync(ProductParameters productParameters);
         Task<ProductDto> GetProductByIdAsync(int id);
         Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetUserProductsAsync(int userId, ProductParameters productParameters);
-        Task DeleteProductAsync(int productId);
+        Task DeleteProductAsync(int productId, int userId);
         Task<ProductDto> CreateProductAsync(int userId, ProductCreationDto productForCreationDto);
         Task<ProductDto> SellProductAsync(int userId, int productId);
         Task UpdateProductAsync(int userId, int productId, ProductUpdateDto productForUpdateDto);

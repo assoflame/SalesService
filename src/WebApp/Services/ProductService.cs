@@ -67,15 +67,24 @@ namespace Services
             return (products: productsDto, metaData: userProductsWithMetaData.MetaData);
         }
 
-        public async Task DeleteProductAsync(int productId)
+        public async Task DeleteProductAsync(int productId, int userId)
         {
             var product = await _unitOfWork.Products
                 .GetProductByIdAsync(productId);
 
-            if (product is null)
+            var user = await _unitOfWork.Users
+                .GetUserByIdAsync(userId);
+
+            if (product is null || user is null)
                 throw new ProductNotFoundException(productId);
 
-            _unitOfWork.Products.Delete(product);
+
+
+            if(product.UserId == user.Id || user.Roles
+                                                .Select(ur => ur.Role)
+                                                .Select(role => role.Name)
+                                                .Contains("admin"))
+                _unitOfWork.Products.Delete(product);
 
             await _unitOfWork.SaveAsync();
         }

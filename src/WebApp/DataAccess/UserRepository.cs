@@ -32,6 +32,8 @@ namespace DataAccess
 
         public async Task<User?> GetUserByIdAsync(int id)
             => await dbContext.Users.Where(user => user.Id == id)
+                        .Include(user => user.Roles)
+                            .ThenInclude(ur => ur.Role)
                         .Include(user => user.ReviewsAsSeller)
                             .ThenInclude(ur => ur.UserWhoRated)
                     .FirstOrDefaultAsync();

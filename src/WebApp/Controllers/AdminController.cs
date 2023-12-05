@@ -57,13 +57,5 @@ namespace Controllers
 
             return BadRequest();
         }
-
-        [HttpDelete("products/{productId:int}")]
-        public async Task<IActionResult> DeleteProduct(int productId)
-        {
-            await _services.ProductService.DeleteProductAsync(productId);
-
-            return NoContent();
-        }
     }
 }

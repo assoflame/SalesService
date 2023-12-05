@@ -186,7 +186,7 @@ namespace Services
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
 
-            var userEmail = principal?.FindFirst(ClaimTypes.Email)?.Value;
+            var userEmail = principal?.FindFirst("Email")?.Value;
 
             var user = await _unitOfWork.Users
                 .GetUserByEmailAsync(userEmail);
