@@ -1,5 +1,5 @@
-export const server = 'http://localhost:5090/';
-export const api = 'http://localhost:5090/api';
+export const server = 'http://localhost:5000/';
+export const api = 'http://localhost:5000/api';
 
 export const createQuery = (url, queryParams = {}) => {
   let query = url + '?';
