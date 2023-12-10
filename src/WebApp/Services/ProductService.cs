@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
 using Entities.Exceptions;
+using Microsoft.AspNetCore.Http;
 using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Shared.RequestFeatures;
 
 namespace Services
@@ -18,13 +13,11 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _logger;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<(IEnumerable<ProductDto> products, MetaData metaData)>
@@ -171,7 +164,7 @@ namespace Services
 
         private async Task<ProductImage> CreateProductImage(Product product, IFormFile image)
         {
-            var directoryPath = $@"{Directory.GetCurrentDirectory()}\wwwroot\images\{product.Id}";
+            var directoryPath = $@"{Directory.GetCurrentDirectory()}/wwwroot/images/{product.Id}";
 
             if(!Directory.Exists(directoryPath))
             {
@@ -179,13 +172,13 @@ namespace Services
             }
 
             int.TryParse(Directory.GetFiles(directoryPath)
-                            .Select(file => file.Split('\\')
+                            .Select(file => file.Split('/')
                             .Last().Split('.').First())
                             .Max(), out var imageNumber);
 
             ++imageNumber;
 
-            var imagePath = String.Join("\\", directoryPath, string.Concat(imageNumber, Path.GetExtension(image.FileName)));
+            var imagePath = String.Join("/", directoryPath, string.Concat(imageNumber, Path.GetExtension(image.FileName)));
 
             using(var fileStream = new FileStream(imagePath, FileMode.Create))
             {

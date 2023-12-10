@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SalesService.Entities.Models;
@@ -15,17 +14,15 @@ namespace Services
 {
     public class AuthService : IAuthService
     {
-        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
 
         private User? _user;
 
-        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger,
+        public AuthService(IUnitOfWork unitOfWork, IMapper mapper,
             IConfiguration configuration)
         {
-            _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -59,7 +56,6 @@ namespace Services
 
             if (_user == null)
             {
-                _logger.LogError($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong email");
                 return false;
             }
 
@@ -68,7 +64,6 @@ namespace Services
 
             if (passwordHash != _user.PasswordHash)
             {
-                _logger.LogError($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong password");
                 return false;
             }
 

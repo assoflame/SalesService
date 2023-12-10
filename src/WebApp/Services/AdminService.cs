@@ -3,11 +3,6 @@ using DataAccess.Interfaces;
 using Entities.Exceptions;
 using SalesService.Entities.Models;
 using Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
@@ -15,13 +10,11 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _logger;
 
-        public AdminService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
+        public AdminService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task BlockUser(int userId)

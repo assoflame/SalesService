@@ -12,13 +12,11 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _logger;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<(IEnumerable<UserDto> users, MetaData metaData)>

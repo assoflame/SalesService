@@ -1,11 +1,6 @@
 ﻿using DataAccess.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SalesService.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -55,6 +50,7 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
             modelBuilder.ApplyConfiguration(new ProductsConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRolesConfiguration());
         }
 
         public DbSet<Chat> Chats { get; set; }

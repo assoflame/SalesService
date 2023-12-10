@@ -5,25 +5,18 @@ using SalesService.Entities.Models;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services
 {
     public class ChatService : IChatService
     {
-        private ILoggerManager _logger;
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
 
-        public ChatService(IUnitOfWork unitOfWork, IMapper mapper, ILoggerManager logger)
+        public ChatService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<(IEnumerable<ChatDto> chatsDto, MetaData metaData)> 

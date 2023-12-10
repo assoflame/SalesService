@@ -1,12 +1,9 @@
 using SalesService.Extensions;
-using Services.Interfaces;
 using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.ConfigureLoggerManager();
 
 builder.Services.ConfigureDbContext(builder.Configuration);
 
@@ -31,14 +28,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-var logger = app.Services.GetService<ILoggerManager>();
-
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors();
 
-app.ConfigureExceptionHandler(logger);
+app.ConfigureExceptionHandler();
 
 // app.UseHttpsRedirection();
 

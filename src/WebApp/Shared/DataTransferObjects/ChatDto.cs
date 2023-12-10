@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.DataTransferObjects
+﻿namespace Shared.DataTransferObjects
 {
-    public record ChatDto(int Id, UserDto FirstUser, UserDto SecondUser, DateTime CreationDate, MessageDto[] messages);
+    public record ChatDto(int Id, UserDto FirstUser, UserDto SecondUser,
+        DateTime CreationDate, MessageDto[] messages);
 }

@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
-using Entities.ErrorModel;
-using Services.Interfaces;
+﻿using Entities.ErrorModel;
 using Entities.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace SalesService.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
-        public static void ConfigureExceptionHandler(this WebApplication app, ILoggerManager logger)
+        public static void ConfigureExceptionHandler(this WebApplication app)
         {
             app.UseExceptionHandler(appBuilder =>
             {
@@ -27,8 +25,6 @@ namespace SalesService.Extensions
 
                             _ => StatusCodes.Status500InternalServerError
                         };
-
-                        logger.LogError($"Something went wrong: {contextFeature.Error}");
 
                         await context.Response.WriteAsync(new ErrorDetails()
                         {

@@ -1,13 +1,7 @@
 ﻿using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests
 {
@@ -30,10 +24,10 @@ namespace Tests
             };
 
             await InitAuthorizationHeader(
-                clients.AuthorizedClient, new SignInDto() { Email = "test@gmail.com", Password = "test" });
+                clients.AuthorizedClient, new SignInDto() { Email = "test@gmail.com", Password = "Test123$" });
 
             await InitAuthorizationHeader(
-                clients.AdminClient, new SignInDto() { Email = "admin@gmail.com", Password = "SUPERUSER" });
+                clients.AdminClient, new SignInDto() { Email = "admin@gmail.com", Password = "Admin123&" });
 
             return clients;
         }

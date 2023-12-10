@@ -2,9 +2,9 @@
 using DataAccess.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Services;
 using Services.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace Web.Extensions
@@ -20,9 +20,6 @@ namespace Web.Extensions
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
             => services.AddDbContext<ApplicationContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
-        public static void ConfigureLoggerManager(this IServiceCollection services)
-            => services.AddSingleton<ILoggerManager, LoggerManager>();
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
