@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    aspnet:
+        image: aspnet
+        container_name: aspnet
+        ports:
+          - "5000:80"
+          - "5001:443"
+        depends_on:
+          - postgre
+    react:
+        image: react
+        container_name: react
+        ports:
+          - "3000:3000"
+    postgre:
+        image: postgres:15.2
+        container_name: "postgre"
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: SalesService
+        ports:
+          - "5432:5432"
+        restart: always
+# volumes:
+#   - /pgdata:/var/lib/postgresql/data
+
