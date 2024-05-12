@@ -9,8 +9,8 @@ const Logout = () => {
     const signInPage = '/signin';
 
     return (
-        <Button classNames={styles.button} callback={() => {
-            logout();
+        <Button classNames={styles.button} callback={async () => {
+            await logout();
             navigate(signInPage, { replace: true })
         }}>Выйти</Button>
     )

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { sendMessage } from '../../helpers/chats';
 import styles from "./ModalMessage.module.css"
 import Button from "../UI/Button/Button"
+import { trySendAuthorizedRequest } from '../../helpers/auth';
 
 
 const ModalMessage = ({ sellerId }) => {
@@ -12,7 +13,7 @@ const ModalMessage = ({ sellerId }) => {
         <form className={styles.form}
             onSubmit={async (e) => {
                 e.preventDefault();
-                if(await sendMessage(sellerId, {body: message}))
+                if(await trySendAuthorizedRequest(sendMessage, {userId: sellerId, message}))
                     window.location.reload();
             }}>
             <textarea placeholder='Сообщение...' className={styles.textarea}

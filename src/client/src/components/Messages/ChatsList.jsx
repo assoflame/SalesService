@@ -7,6 +7,7 @@ import { getPagesCount } from "../../helpers/shared";
 import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
 import styles from "./ChatsList.module.css";
 import ChatCard from "./ChatCard";
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 const ChatsList = ({className, setChatId}) => {
@@ -19,7 +20,7 @@ const ChatsList = ({className, setChatId}) => {
     const pages = usePagination(totalPages);
 
     const [fetchChats, isChatsLoading, fetchChatsError] = useFetching(async () => {
-        const response = await getChats(queryParams);
+        const response = await trySendAuthorizedRequest(getChats, queryParams)
         setChats([...await response.json()]);
         const totalCount = JSON.parse(response.headers.get('X-Pagination')).TotalCount;
         setTotalPages(getPagesCount(totalCount, queryParams.pageSize));

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using Shared.DataTransferObjects;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using Shared;
 
 namespace Controllers
 {
@@ -9,10 +12,12 @@ namespace Controllers
     public class AuthController : ControllerBase
     {
         private readonly IServiceManager _services;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthController(IServiceManager services)
+        public AuthController(IServiceManager services, IOptionsSnapshot<JwtSettings> jwtSettings)
         {
             _services = services;
+            _jwtSettings = jwtSettings.Value;
         }
 
         [HttpPost("signup")]
@@ -32,13 +37,57 @@ namespace Controllers
             if (!await _services.AuthService.ValidateUserAsync(userSignInDto))
                 return Unauthorized();
 
-            return Ok(await _services.AuthService.CreateTokenAsync(populateExp: true));
+            var (tokensInfo, authInfo) = await _services.AuthService.CreateTokenAsync(populateExp: true);
+
+            AddTokenToCookies(tokensInfo);
+
+            return Ok(authInfo);
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+        public async Task<IActionResult> RefreshToken()
         {
-            return Ok(await _services.AuthService.RefreshTokenAsync(tokenDto));
+            var oldTokensInfo = new TokensInfo(
+                    HttpContext.Request.Cookies["access-token"],
+                    HttpContext.Request.Cookies["refresh-token"]
+                );
+
+            var (tokensInfo, authInfo) = await _services.AuthService.RefreshTokenAsync(oldTokensInfo);
+
+            //var serializedTokenDto = JsonSerializer.Serialize(tokenDto);
+
+            AddTokenToCookies(tokensInfo);
+
+            return Ok(authInfo);
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            AddTokenToCookies(new TokensInfo(string.Empty, string.Empty));
+
+            return Ok();
+        }
+
+        private void AddTokenToCookies(TokensInfo tokens)
+        {
+            HttpContext.Response.Cookies.Append("access-token", tokens.AccessToken,
+                new()
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    IsEssential = true,
+                    SameSite = SameSiteMode.None
+                });
+
+            HttpContext.Response.Cookies.Append("refresh-token", tokens.RefreshToken,
+                new()
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    IsEssential = true,
+                    SameSite = SameSiteMode.None
+                });
         }
     }
 }

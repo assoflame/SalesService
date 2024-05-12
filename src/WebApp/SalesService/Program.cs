@@ -13,8 +13,9 @@ builder.Services.ConfigureServiceManager();
 
 builder.Services.ConfigureUnitOfWork();
 
+builder.Services.ConfigureJwtSettings(builder.Configuration);
+
 builder.Services.ConfigureJWT(builder.Configuration);
-builder.Services.AddAuthorization();
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Controllers.AssemblyReference).Assembly);
@@ -42,7 +43,6 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseMiddleware<CheckUserStatusMiddleware>();
 app.UseAuthorization();
-
 
 app.MapControllers();
 

@@ -10,6 +10,7 @@ using System.Text.Json;
 namespace Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
@@ -57,7 +58,6 @@ namespace Controllers
             return Ok(userProducts.products);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromForm] ProductCreationDto productCreationDto)
         {
@@ -82,7 +82,6 @@ namespace Controllers
             return Ok(photos);
         }
 
-        [Authorize]
         [HttpPost("{productId:int}/photos")]
         public async Task<IActionResult> UploadPhotos(int productId, [ImageValidation] IFormFileCollection images)
         {
@@ -99,7 +98,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpDelete("{productId:int}/photos")]
         public async Task<IActionResult> DeleteProductPhotos(int productId)
         {
@@ -113,7 +111,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpPut("{productId:int}")]
         public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductUpdateDto productUpdateDto)
         {
@@ -130,7 +127,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpPatch("{productId:int}")]
         public async Task<IActionResult> SellProduct(int productId)
         {
@@ -144,7 +140,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [Authorize]
         [HttpDelete("{productId:int}")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {

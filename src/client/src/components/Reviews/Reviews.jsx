@@ -8,6 +8,7 @@ import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
 import Button from "../UI/Button/Button";
 import Modal from "../UI/Modal/Modal";
 import ModalReview from "../ModalReview/ModalReview";
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 
@@ -23,7 +24,7 @@ const Reviews = ({ className, userId }) => {
     const [reviewVisible, setReviewVisible] = useState(false);
 
     const [fetchReviews, isReviewsLoading, fetchReviewsError] = useFetching(async () => {
-        let response = await getUserReviews(userId, queryParams);
+        let response = await trySendAuthorizedRequest(getUserReviews, {id: userId, queryParams})
         setReviews([...await response.json()]);
         let totalCount = JSON.parse(response.headers.get("X-Pagination")).TotalCount;
         console.log(JSON.parse(response.headers.get("X-Pagination")));
@@ -39,7 +40,7 @@ const Reviews = ({ className, userId }) => {
         <div className={[styles.reviewsContainer, className].join(' ')}>
             <div className={styles.reviewsHeader}>
                 <h1 className={styles.reviewsTitle}>Отзывы продавца</h1>
-                <Button callback={() => setReviewVisible(true)}>Оставить отзыв</Button>
+                {localStorage['id'] != userId && <Button callback={() => setReviewVisible(true)}>Оставить отзыв</Button>}
             </div>
             <div className={styles.list}>
                 {

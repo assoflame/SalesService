@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
+using Entities.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SalesService.Entities.Models;
 using Services.Interfaces;
+using Shared;
 using Shared.DataTransferObjects;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace Services
 {
@@ -16,16 +20,17 @@ namespace Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
+        private readonly JwtSettings _jwtSettings;
 
         private User? _user;
 
         public AuthService(IUnitOfWork unitOfWork, IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IOptionsSnapshot<JwtSettings> jwtOptionsSnapshot)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
+            _jwtSettings = jwtOptionsSnapshot.Value;
         }
 
         public async Task SignUpAsync(SignUpDto userSignUpDto)
@@ -54,7 +59,7 @@ namespace Services
             _user = await _unitOfWork.Users
                 .GetUserByEmailAsync(userForSignInDto.Email);
 
-            if (_user == null)
+            if (_user == null || _user.Status == UserStatus.Blocked)
             {
                 return false;
             }
@@ -63,11 +68,6 @@ namespace Services
                 String.Concat(userForSignInDto.Password, _user.FirstName, _user.LastName));
 
             if (passwordHash != _user.PasswordHash)
-            {
-                return false;
-            }
-
-            if(_user.Status == UserStatus.Blocked)
             {
                 return false;
             }
@@ -94,23 +94,26 @@ namespace Services
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings["secretKey"])),
+                    Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
                 ValidateLifetime = true,
-                ValidIssuer = jwtSettings["validIssuer"],
-                ValidAudience = jwtSettings["validAudience"]
+                ValidIssuer = _jwtSettings.ValidIssuer,
+                ValidAudience = _jwtSettings.ValidAudience
             };
+
             var tokenHandler = new JwtSecurityTokenHandler();
+
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out
                 securityToken);
+
             var jwtSecurityToken = securityToken as JwtSecurityToken;
+
             if (jwtSecurityToken == null ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                                            StringComparison.InvariantCultureIgnoreCase))
@@ -121,23 +124,39 @@ namespace Services
             return principal;
         }
 
-        public async Task<TokenDto> CreateTokenAsync(bool populateExp)
+        public async Task<(TokensInfo, AuthInfo)> CreateTokenAsync(bool populateExp)
         {
             var signingCredentials = GetSigningCredentials();
+
             var claims = GetClaims();
+
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+
             var refreshToken = GenerateRefreshToken();
+
             _user.RefreshToken = refreshToken;
+
             if (populateExp)
                 _user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
             _unitOfWork.Users.Update(_user);
+
             await _unitOfWork.SaveAsync();
+
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            return new TokenDto(accessToken, refreshToken);
+
+            return (
+                new TokensInfo(accessToken, refreshToken),
+                new AuthInfo(
+                    int.Parse(claims.First(c => c.Type == "Id").Value),
+                    claims.Where(c => c.Type == "role").Select(c => c.Value).ToArray(),
+                    DateTime.UtcNow.AddMinutes(_jwtSettings.AccessExpiresInMunutes)
+                ));
         }
+
         private SigningCredentials GetSigningCredentials()
         {
-            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtSettings")["secretKey"]);
+            var key = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
@@ -164,33 +183,31 @@ namespace Services
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
             List<Claim> claims)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenOptions = new JwtSecurityToken
             (
-                issuer: jwtSettings["validIssuer"],
-                audience: jwtSettings["validAudience"],
+                issuer: _jwtSettings.ValidIssuer,
+                audience: _jwtSettings.ValidAudience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Double.Parse(jwtSettings["expires"])),
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.AccessExpiresInMunutes),
                 signingCredentials: signingCredentials
             );
 
             return tokenOptions;
         }
 
-        public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
+        public async Task<(TokensInfo, AuthInfo)> RefreshTokenAsync(TokensInfo tokensInfo)
         {
-            var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+            var principal = GetPrincipalFromExpiredToken(tokensInfo.AccessToken);
 
             var userEmail = principal?.FindFirst("Email")?.Value;
 
             var user = await _unitOfWork.Users
                 .GetUserByEmailAsync(userEmail);
 
-            if (user is null || user.RefreshToken != tokenDto.RefreshToken ||
-                   user.RefreshTokenExpiryTime < DateTime.Now)
+            if (user is null || user.RefreshToken != tokensInfo.RefreshToken ||
+                   user.RefreshTokenExpiryTime < DateTime.UtcNow)
             {
-                //throw new RefreshTokenBadRequest();
-                throw new ArgumentException();
+                throw new RefreshTokenBadRequestException();
             }
 
             _user = user;

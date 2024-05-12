@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ProductCard.module.css"
 import { server } from "../../helpers/shared"
-import { isAdmin } from "../../helpers/auth";
+import { isAdmin, trySendAuthorizedRequest } from "../../helpers/auth";
 import Button from "../UI/Button/Button"
 import { deleteProduct } from "../../helpers/products";
 import { Link } from "react-router-dom";
@@ -44,7 +44,7 @@ const ProductCard = ({ product }) => {
                 <Button classNames={styles.updateButton} callback={() => setProductUpdateVisible(true)} >Изменить продукт</Button>}
 
             {(isAdmin() || localStorage["id"] == product.userId) && <Button classNames={styles.deleteButton}
-                callback={async () => { await deleteProduct(product.id); window.location.reload(); }}>Удалить продукт</Button>}
+                callback={async () => { await trySendAuthorizedRequest(deleteProduct, product.id); window.location.reload(); }}>Удалить продукт</Button>}
 
             <Modal visible={productUpdateVisible} setVisible={setProductUpdateVisible}>
                 <ProductUpdateForm product={product}/>

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DataAccess.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Services.Interfaces;
+using Shared;
 
 namespace Services
 {
@@ -14,7 +16,7 @@ namespace Services
         private readonly Lazy<IChatService> _chatService;
 
         public ServiceManager(IUnitOfWork unitOfWork, IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration, IOptionsSnapshot<JwtSettings> jwtOptionsSnapshot)
         {
             _userService = new Lazy<IUserService>(
                 () => new UserService(unitOfWork, mapper));
@@ -23,7 +25,7 @@ namespace Services
                 () => new ProductService(unitOfWork, mapper));
 
             _authService = new Lazy<IAuthService>(
-                () => new AuthService(unitOfWork, mapper, configuration));
+                () => new AuthService(unitOfWork, mapper, configuration, jwtOptionsSnapshot));
 
             _adminService = new Lazy<IAdminService>(
                 () => new AdminService(unitOfWork, mapper));

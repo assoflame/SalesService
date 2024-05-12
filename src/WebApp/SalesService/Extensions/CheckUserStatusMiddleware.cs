@@ -13,7 +13,7 @@ namespace SalesService.Extensions
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (!context.User.Identity.IsAuthenticated ||
+            if (!context.User.Identity!.IsAuthenticated ||
                 context.User.HasClaim("Status", UserStatus.Normal.ToString()))
             {
                 await _next.Invoke(context);

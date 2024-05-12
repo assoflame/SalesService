@@ -6,7 +6,7 @@ namespace Services.Interfaces
     {
         Task SignUpAsync(SignUpDto userForSignUpDto);
         Task<bool> ValidateUserAsync(SignInDto userForSignInDto);
-        Task<TokenDto> CreateTokenAsync(bool populateExp);
-        Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto);
+        Task<(TokensInfo, AuthInfo)> CreateTokenAsync(bool populateExp);
+        Task<(TokensInfo, AuthInfo)> RefreshTokenAsync(TokensInfo tokensInfo);
     }
 }

@@ -16,7 +16,7 @@ const SignInForm = () => {
     return (
         <form className={styles.form} onSubmit={async (e) => {
             e.preventDefault();
-            if(await signIn(form)){
+            if((await signIn(form)).success){
                 navigate(productsPage, {replace : true});
             }
         }}>

@@ -1,25 +1,15 @@
-import { getAccessToken } from "./auth";
 import { createQuery, api } from "./shared"
 
 export const getChats = async (queryParams) => {
-    console.log('get chats');
     let queryStr = createQuery(`${api}/chats`, queryParams);
-
-    console.log(queryStr);
     let response = await fetch(queryStr, {
         method : 'GET',
-        headers : {
-            "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${await getAccessToken()}`
-        }
+        headers : { "Content-Type" : "application/json" },
+        credentials: "include"
     });
 
-    if(response.ok) {
-        console.log('get chats success');
-        return response;
-    } else {
-        console.log('get chats error');
-    }
+    if(response.ok)
+        return response
 
     return [];
 }
@@ -27,37 +17,28 @@ export const getChats = async (queryParams) => {
 export const getChatById = async (id) => {
     let response = await fetch(`${api}/chats/${id}`, {
         method : 'GET',
-        headers : {
-            "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${await getAccessToken()}`
-        }
+        headers : { "Content-Type" : "application/json" },
+        credentials: "include"
     });
 
     if(response.ok) {
-        console.log('get chat by id success');
-        let chat = await response.json();
-        return chat;
-    } else {
-        console.log('get chat by id error');
+        return await response.json();
     }
+
+    return null
 }
 
-export const sendMessage = async (userId, message) => {
+export const sendMessage = async ({userId, message}) => {
+    console.log(userId)
+    console.log(message)
     let response = await fetch(`${api}/users/${userId}/messages`, {
         method: 'POST',
-        headers : {
-            "Content-Type" : "application/json",
-            'Authorization' : `Bearer ${await getAccessToken()}`
-        },
-        body: JSON.stringify(message)
+        headers : { "Content-Type" : "application/json" },
+        body: JSON.stringify({body: message}),
+        credentials: "include"
     });
-
-    if(response.ok) {
-        console.log('send message success');
-        return true;
-    }
-    console.log('send message error');
-    return false;
+    
+    return response.ok;
 }
 
 export const getLastMessageTime = (message) => {

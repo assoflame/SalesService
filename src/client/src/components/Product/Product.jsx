@@ -12,7 +12,7 @@ import Button from "../UI/Button/Button";
 import Modal from "../UI/Modal/Modal"
 import ModalMessage from "../ModalMessage/ModalMessage"
 import Reviews from "../Reviews/Reviews";
-import { isAdmin } from "../../helpers/auth";
+import { isAdmin, trySendAuthorizedRequest } from "../../helpers/auth";
 import { blockUser } from "../../helpers/admin";
 
 
@@ -23,8 +23,8 @@ const Product = () => {
     const [messageVisible, setMessageVisible] = useState(false);
 
     const [fetchProduct, isProductLoading, fetchProductError] = useFetching(async () => {
-        let prod = await getProductById(id);
-        setProduct(prod);
+        let fetchedProduct = await trySendAuthorizedRequest(getProductById, id)
+        setProduct(fetchedProduct);
     }, () => setProduct({}));
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const Product = () => {
                                 </div>
                                 {isAdmin() && product.userId != localStorage['id'] &&
                                     <Button classNames={styles.blockUserButton}
-                                        callback={() => blockUser(product.userId)}>Заблокировать пользователя
+                                        callback={async () => await blockUser(product.userId)}>Заблокировать пользователя
                                     </Button>}
                                 <Modal visible={messageVisible} setVisible={setMessageVisible}>
                                     <ModalMessage sellerId={product?.userId} />

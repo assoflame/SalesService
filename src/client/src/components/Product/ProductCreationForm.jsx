@@ -3,6 +3,7 @@ import { createProduct } from "../../helpers/products";
 import styles from "./ProductCreationForm.module.css"
 import Button from "../UI/Button/Button"
 import FilesInput from "../UI/FilesInput/FilesInput";
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 const ProductCreationForm = () => {
@@ -14,12 +15,7 @@ const ProductCreationForm = () => {
     return (
         <form id={styles.form} onSubmit={async e => {
             e.preventDefault();
-            if (await createProduct({
-                name,
-                description,
-                price,
-                images
-            }))
+            if (await trySendAuthorizedRequest(createProduct, {name, description, price, images}))
                 window.location.reload();
         }}>
             <div className={styles.inputs}>

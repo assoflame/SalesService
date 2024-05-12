@@ -82,7 +82,6 @@ namespace Controllers
             return BadRequest();
         }
 
-        [AllowAnonymous]
         [HttpGet("{userId:int}/reviews")]
         public async Task<IActionResult> GetUserReviews(int userId, [FromQuery] ReviewParams reviewParams)
         {

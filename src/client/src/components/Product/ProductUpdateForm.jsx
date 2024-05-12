@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { updateProduct } from "../../helpers/products";
 import styles from "./ProductCreationForm.module.css"
 import Button from "../UI/Button/Button"
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 const ProductCreationForm = ({product}) => {
@@ -12,12 +13,8 @@ const ProductCreationForm = ({product}) => {
     return (
         <form id={styles.form} onSubmit={async e => {
             e.preventDefault();
-            if (await updateProduct(product.id,
-                {
-                    name,
-                    description,
-                    price
-                }))
+            if (await trySendAuthorizedRequest(updateProduct, 
+                {productId: product.id, productUpdateDto: {name, description, product}}))
                 window.location.reload();
         }}>
             <div className={styles.inputs}>

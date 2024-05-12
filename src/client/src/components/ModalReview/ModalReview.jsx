@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./ModalReview.module.css"
 import { sendReview } from "../../helpers/users";
 import Button from "../UI/Button/Button"
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 const ModalReview = ({ sellerId }) => {
@@ -14,7 +15,9 @@ const ModalReview = ({ sellerId }) => {
                 <textarea className={styles.starsCount} placeholder="Количество звёзд (1-5)" onChange={e => setStarsCount(e.target.value)} />
                 <textarea className={styles.comment} placeholder="Комментарий" onChange={e => setReview(e.target.value)} />
             </div>
-            <Button classNames={styles.button} callback={() => sendReview(sellerId, { starsCount, comment: review })}>Отправить</Button>
+            <Button classNames={styles.button} 
+                callback={async () => await trySendAuthorizedRequest(sendReview, 
+                                            {userId: sellerId, review: {starsCount, comment: review}})}>Отправить</Button>
         </form>
     )
 }

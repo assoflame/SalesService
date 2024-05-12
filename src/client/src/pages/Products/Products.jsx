@@ -14,6 +14,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import ProductCreationForm from "../../components/Product/ProductCreationForm";
 import Button from "../../components/UI/Button/Button";
 import Logout from "../../components/Auth/Logout"
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 export const Products = () => {
@@ -32,7 +33,7 @@ export const Products = () => {
     const [productCreationVisible, setProductCreationVisible] = useState(false);
 
     const [fetchProducts, isProductsLoading, productsError] = useFetching(async () => {
-        const response = await getProducts(queryParams);
+        const response = await trySendAuthorizedRequest(getProducts, queryParams)
         setProducts([...await response.json()]);
         const totalCount = JSON.parse(response.headers.get('X-Pagination')).TotalCount;
         setTotalPages(getPagesCount(totalCount, queryParams.pageSize));

@@ -3,6 +3,7 @@ import { getChatById, getLastMessageTime, sendMessage } from "../../helpers/chat
 import Button from "../UI/Button/Button"
 import styles from "./Chat.module.css"
 import { useFetching } from "../../hooks/useFetching";
+import { trySendAuthorizedRequest } from "../../helpers/auth";
 
 
 const Chat = ({ className, chatId }) => {
@@ -11,7 +12,7 @@ const Chat = ({ className, chatId }) => {
     const [chat, setChat] = useState({});
 
     const [fetchChat, isChatLoading, fetchChatError] = useFetching(async () => {
-        let freshChat = await getChatById(chatId);
+        let freshChat = await trySendAuthorizedRequest(getChatById, chatId)
         setChat(freshChat);
         setMessages(freshChat.messages);
     }, () => setChat({}));
@@ -82,8 +83,8 @@ const Chat = ({ className, chatId }) => {
                     </div>
                     <div className={styles.messageCreation}>
                         <textarea onChange={e => setMessage(e.target.value)} value={message} placeholder="Сообщение..." className={styles.textarea} />
-                        <Button callback={() => {
-                            sendMessage(getOtherUser().id, { body: message });
+                        <Button callback={async () => {
+                            await trySendAuthorizedRequest(sendMessage, {userId: getOtherUser().id, message})
                             setMessages([...messages,
                             {
                                 body: message,
