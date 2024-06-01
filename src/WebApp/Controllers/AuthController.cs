@@ -12,12 +12,10 @@ namespace Controllers
     public class AuthController : ControllerBase
     {
         private readonly IServiceManager _services;
-        private readonly JwtSettings _jwtSettings;
 
-        public AuthController(IServiceManager services, IOptionsSnapshot<JwtSettings> jwtSettings)
+        public AuthController(IServiceManager services)
         {
             _services = services;
-            _jwtSettings = jwtSettings.Value;
         }
 
         [HttpPost("signup")]
@@ -34,10 +32,11 @@ namespace Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto userSignInDto)
         {
+
             if (!await _services.AuthService.ValidateUserAsync(userSignInDto))
                 return Unauthorized();
 
-            var (tokensInfo, authInfo) = await _services.AuthService.CreateTokenAsync(populateExp: true);
+            var (tokensInfo, authInfo) = await _services.AuthService.CreateTokenAsync();
 
             AddTokenToCookies(tokensInfo);
 
@@ -53,8 +52,6 @@ namespace Controllers
                 );
 
             var (tokensInfo, authInfo) = await _services.AuthService.RefreshTokenAsync(oldTokensInfo);
-
-            //var serializedTokenDto = JsonSerializer.Serialize(tokenDto);
 
             AddTokenToCookies(tokensInfo);
 

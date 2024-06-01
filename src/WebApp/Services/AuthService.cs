@@ -12,7 +12,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 
 namespace Services
 {
@@ -37,7 +36,7 @@ namespace Services
         {
             var user = _mapper.Map<User>(userSignUpDto);
 
-            user.PasswordSalt = user.FirstName + user.LastName;
+            user.PasswordSalt = ComputeSalt(user.Email);
             user.PasswordHash = ComputeMD5HashString(userSignUpDto.Password + user.PasswordSalt);
 
             _unitOfWork.Users.Create(user);
@@ -47,11 +46,19 @@ namespace Services
             _unitOfWork.UserRoles.Create( new UserRole
                 {
                     User = user,
-                    RoleId = role.Id
+                    RoleId = role!.Id
                 }
             );
 
             await _unitOfWork.SaveAsync();
+        }
+
+        private static string ComputeSalt(string baseValue)
+        {
+            var bytes = Encoding.UTF8.GetBytes(baseValue);
+            var hash = SHA256.HashData(bytes);
+
+            return Convert.ToBase64String(hash);
         }
 
         public async Task<bool> ValidateUserAsync(SignInDto userForSignInDto)
@@ -65,7 +72,7 @@ namespace Services
             }
 
             var passwordHash = ComputeMD5HashString(
-                String.Concat(userForSignInDto.Password, _user.FirstName, _user.LastName));
+                String.Concat(userForSignInDto.Password, _user.PasswordSalt));
 
             if (passwordHash != _user.PasswordHash)
             {
@@ -124,7 +131,7 @@ namespace Services
             return principal;
         }
 
-        public async Task<(TokensInfo, AuthInfo)> CreateTokenAsync(bool populateExp)
+        public async Task<(TokensInfo, AuthInfo)> CreateTokenAsync()
         {
             var signingCredentials = GetSigningCredentials();
 
@@ -134,10 +141,8 @@ namespace Services
 
             var refreshToken = GenerateRefreshToken();
 
-            _user.RefreshToken = refreshToken;
-
-            if (populateExp)
-                _user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            _user!.RefreshToken = refreshToken;
+            _user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMonths(1);
 
             _unitOfWork.Users.Update(_user);
 
@@ -165,7 +170,7 @@ namespace Services
         {
             var claims = new List<Claim>
             {
-                new Claim("Email", _user.Email),
+                new Claim("Email", _user!.Email),
                 new Claim("Status", _user.Status.ToString()),
                 new Claim("Id", _user.Id.ToString())
             };
@@ -199,7 +204,7 @@ namespace Services
         {
             var principal = GetPrincipalFromExpiredToken(tokensInfo.AccessToken);
 
-            var userEmail = principal?.FindFirst("Email")?.Value;
+            var userEmail = principal!.FindFirst("Email")!.Value!;
 
             var user = await _unitOfWork.Users
                 .GetUserByEmailAsync(userEmail);
@@ -211,7 +216,7 @@ namespace Services
             }
 
             _user = user;
-            return await CreateTokenAsync(populateExp: false);
+            return await CreateTokenAsync();
         }
     }
 }

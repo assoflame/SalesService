@@ -28,17 +28,13 @@ namespace Web.Extensions
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
 
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                //.AddCookie(cookieAuthOptions =>
-                //{
-                //    cookieAuthOptions.Cookie.Name = "access-token";
-                //})
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
