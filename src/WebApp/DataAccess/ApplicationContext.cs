@@ -8,7 +8,7 @@ namespace DataAccess
     {
         public ApplicationContext(DbContextOptions options) : base(options)
         {
-            //this.Database.EnsureCreated();
+            this.Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

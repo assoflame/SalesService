@@ -12,7 +12,7 @@ const FilesInput = ({ uploadedFiles, setUploadedFiles }) => {
         let choosenFiles = [...event.target.files];
 
         if (uploadedFiles.length + choosenFiles.length > maxFilesCount) {
-            alert(`Вы не можете добавить к продукту более ${maxFilesCount} изображений.`);
+            alert(`Вы не можете добавить более ${maxFilesCount} изображений.`);
             return;
         }
 

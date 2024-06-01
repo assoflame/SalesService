@@ -6,6 +6,10 @@
   color: #222831;
 }
 
+img {
+  object-fit: contain;
+}
+
 a {
   color: inherit;
   text-decoration: none;

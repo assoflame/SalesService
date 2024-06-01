@@ -5,7 +5,7 @@ namespace Shared.DataTransferObjects
     public record ProductUpdateDto
     {
         [Required]
-        [MaxLength(15, ErrorMessage = "Название продукта не должно превышать 15 символов.")]
+        [MaxLength(30, ErrorMessage = "Название продукта не должно превышать 30 символов.")]
         public string Name { get; init; }
 
         [Required]

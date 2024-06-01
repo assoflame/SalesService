@@ -164,21 +164,17 @@ namespace Services
 
         private async Task<ProductImage> CreateProductImage(Product product, IFormFile image)
         {
-            var directoryPath = $@"{Directory.GetCurrentDirectory()}/wwwroot/images/{product.Id}";
+            var directoryPath = $@"{Directory.GetCurrentDirectory()}\wwwroot\images\{product.Id}";
 
             if(!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
 
-            int.TryParse(Directory.GetFiles(directoryPath)
-                            .Select(file => file.Split('/')
-                            .Last().Split('.').First())
-                            .Max(), out var imageNumber);
+            var files = Directory.GetFiles(directoryPath);
+            var nextImageNumber = files.Length + 1;
 
-            ++imageNumber;
-
-            var imagePath = String.Join("/", directoryPath, string.Concat(imageNumber, Path.GetExtension(image.FileName)));
+            var imagePath = String.Join("\\", directoryPath, string.Concat(nextImageNumber, Path.GetExtension(image.FileName)));
 
             using(var fileStream = new FileStream(imagePath, FileMode.Create))
             {
@@ -188,7 +184,7 @@ namespace Services
             var productImage = new ProductImage
             {
                 ProductId = product.Id,
-                Path = String.Join("/", "images", product.Id, string.Concat(imageNumber, Path.GetExtension(image.FileName)))
+                Path = String.Join("\\", "images", product.Id, string.Concat(nextImageNumber, Path.GetExtension(image.FileName)))
             };
 
             return productImage;

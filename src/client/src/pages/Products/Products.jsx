@@ -67,12 +67,12 @@ export const Products = () => {
                     <input className={styles.input} onChange={e => setQueryParams({ ...queryParams, searchString: e.target.value })} placeholder="Поиск..." />
                     <Button callback={async () => {setQueryParams({...queryParams, pageNumber: 1}); await fetchProducts();}}>Найти</Button>
                 </div>
-                <Button callback={() => setProductCreationVisible(true)}>Создать товар</Button>
+                <Button callback={() => setProductCreationVisible(true)}>Создать объявление</Button>
                 <Modal visible={productCreationVisible} setVisible={setProductCreationVisible}>
                     <ProductCreationForm/>
                 </Modal>
 
-                {productsError && <div>Ошибка загрузки товаров</div>}
+                {productsError && <div>Ошибка загрузки</div>}
                 {
                     isProductsLoading
                         ? <Loader className={styles.loader}/>

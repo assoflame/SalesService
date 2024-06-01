@@ -14,12 +14,12 @@ const ProductCreationForm = ({product}) => {
         <form id={styles.form} onSubmit={async e => {
             e.preventDefault();
             if (await trySendAuthorizedRequest(updateProduct, 
-                {productId: product.id, productUpdateDto: {name, description, product}}))
+                {productId: product.id, productUpdateDto: {name, description, price}}))
                 window.location.reload();
         }}>
             <div className={styles.inputs}>
-                <input className={styles.input} onChange={e => setName(e.target.value)} name="Name" placeholder="Название товара" />
-                <textarea className={styles.textarea} onChange={e => setDescription(e.target.value)} name="Description" placeholder="Описание товара" />
+                <input className={styles.input} onChange={e => setName(e.target.value)} name="Name" placeholder="Название" />
+                <textarea className={styles.textarea} onChange={e => setDescription(e.target.value)} name="Description" placeholder="Описание" />
                 <input className={styles.input} onChange={e => setPrice(e.target.value)} name="Price" placeholder="Цена" />
             </div>
             <Button classNames={styles.button}>

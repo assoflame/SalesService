@@ -108,7 +108,7 @@ namespace Services
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidIssuer = _jwtSettings.ValidIssuer,
                 ValidAudience = _jwtSettings.ValidAudience
             };

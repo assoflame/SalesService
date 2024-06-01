@@ -21,8 +21,10 @@ const SignInForm = () => {
             }
         }}>
             <div className={styles.authInputs}>
-                <input className={styles.authInput} name="Email" placeholder='Почта' onChange={(e) => setForm({...form, email : e.target.value})}/>
-                <input className={styles.authInput} name="Password" type="password" placeholder='Пароль' onChange={(e) => setForm({...form, password : e.target.value})}/>
+                <input className={styles.authInput} name="Email" placeholder='Почта'
+                 onChange={(e) => setForm({...form, email : e.target.value})}/>
+                <input className={styles.authInput} name="Password" type="password" 
+                placeholder='Пароль' onChange={(e) => setForm({...form, password : e.target.value})}/>
             </div>
             <div className={styles.authButtons}>
                 <button className={styles.authButton} type="submit">Войти в аккаунт</button>
@@ -33,3 +35,4 @@ const SignInForm = () => {
 }
 
 export default SignInForm;
+

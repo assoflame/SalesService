@@ -41,10 +41,10 @@ const ProductCard = ({ product }) => {
                 </div>
             </Link>
             {localStorage["id"] == product.userId &&
-                <Button classNames={styles.updateButton} callback={() => setProductUpdateVisible(true)} >Изменить продукт</Button>}
+                <Button classNames={styles.updateButton} callback={() => setProductUpdateVisible(true)} >Изменить</Button>}
 
             {(isAdmin() || localStorage["id"] == product.userId) && <Button classNames={styles.deleteButton}
-                callback={async () => { await trySendAuthorizedRequest(deleteProduct, product.id); window.location.reload(); }}>Удалить продукт</Button>}
+                callback={async () => { await trySendAuthorizedRequest(deleteProduct, product.id); window.location.reload(); }}>Удалить</Button>}
 
             <Modal visible={productUpdateVisible} setVisible={setProductUpdateVisible}>
                 <ProductUpdateForm product={product}/>

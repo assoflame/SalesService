@@ -41,8 +41,8 @@ export const logout = async () => {
 
 export const trySendAuthorizedRequest = async (request, requestParams) => {
   const expTime = localStorage.getItem('tokenExpired')
-  console.log(new Date(expTime).toUTCString())
-  console.log(new Date(Date.now()).toUTCString())
+  // console.log(new Date(expTime).toUTCString())
+  // console.log(new Date(Date.now()).toUTCString())
 
   if(new Date(expTime).toUTCString() <= new Date(Date.now()).toUTCString()) {
     await tryRefreshToken();
