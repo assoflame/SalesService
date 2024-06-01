@@ -1,13 +1,13 @@
 import { React, useEffect, useState } from "react";
 import { usePagination } from "../../hooks/usePagination";
-import { getChats } from "../../helpers/chats";
+import { getChats } from "../../api/chats";
 import { useFetching } from "../../hooks/useFetching";
 import Loader from "../UI/Loader/Loader";
-import { getPagesCount } from "../../helpers/shared";
+import { getPagesCount } from "../../api/shared";
 import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
 import styles from "./ChatsList.module.css";
 import ChatCard from "./ChatCard";
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 const ChatsList = ({className, setChatId}) => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signIn, signUp } from "../../helpers/auth";
+import { signIn, signUp } from "../../api/auth";
 import styles from "./AuthForm.module.css"
 import { NavLink, useNavigate } from "react-router-dom";
 

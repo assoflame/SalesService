@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../UI/Button/Button";
-import { logout } from "../../helpers/auth";
+import { logout } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import styles from './Logout.module.css'
 

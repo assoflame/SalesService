@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./ProductCard.module.css"
-import { server } from "../../helpers/shared"
-import { isAdmin, trySendAuthorizedRequest } from "../../helpers/auth";
+import { server } from "../../api/shared"
+import { isAdmin, trySendAuthorizedRequest } from "../../api/auth";
 import Button from "../UI/Button/Button"
-import { deleteProduct } from "../../helpers/products";
+import { deleteProduct } from "../../api/products";
 import { Link } from "react-router-dom";
 import Modal from "../UI/Modal/Modal";
 import ProductUpdateForm from "./ProductUpdateForm"

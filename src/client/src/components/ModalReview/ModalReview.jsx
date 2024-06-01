@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./ModalReview.module.css"
-import { sendReview } from "../../helpers/users";
+import { sendReview } from "../../api/users";
 import Button from "../UI/Button/Button"
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 const ModalReview = ({ sellerId }) => {

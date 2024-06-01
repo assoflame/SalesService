@@ -1,8 +1,6 @@
 import React from "react";
-import { loggedIn } from "../../helpers/auth";
+import { loggedIn } from "../../api/auth";
 import { Navigate } from "react-router-dom";
-
-
 
 const RequireAuth = ({children}) => {
     

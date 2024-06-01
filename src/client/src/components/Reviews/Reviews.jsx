@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getUserReviews } from "../../helpers/products";
+import { getUserReviews } from "../../api/products";
 import { usePagination } from "../../hooks/usePagination";
 import { useFetching } from "../../hooks/useFetching";
-import { getPagesCount } from "../../helpers/shared";
+import { getPagesCount } from "../../api/shared";
 import styles from "./Reviews.module.css"
 import PageNumbersList from "../UI/Paging/PageNumbersList/PageNumbersList";
 import Button from "../UI/Button/Button";
 import Modal from "../UI/Modal/Modal";
 import ModalReview from "../ModalReview/ModalReview";
-import { trySendAuthorizedRequest } from "../../helpers/auth";
-
-
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 const Reviews = ({ className, userId }) => {
     const [reviews, setReviews] = useState([]);

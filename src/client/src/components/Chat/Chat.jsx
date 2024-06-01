@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getChatById, getLastMessageTime, sendMessage } from "../../helpers/chats";
+import { getChatById, getLastMessageTime, sendMessage } from "../../api/chats";
 import Button from "../UI/Button/Button"
 import styles from "./Chat.module.css"
 import { useFetching } from "../../hooks/useFetching";
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 const Chat = ({ className, chatId }) => {

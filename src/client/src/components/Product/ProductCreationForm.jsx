@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { createProduct } from "../../helpers/products";
+import { createProduct } from "../../api/products";
 import styles from "./ProductCreationForm.module.css"
 import Button from "../UI/Button/Button"
 import FilesInput from "../UI/FilesInput/FilesInput";
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 const ProductCreationForm = () => {

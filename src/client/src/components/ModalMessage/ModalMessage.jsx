@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { sendMessage } from '../../helpers/chats';
+import { sendMessage } from '../../api/chats';
 import styles from "./ModalMessage.module.css"
 import Button from "../UI/Button/Button"
-import { trySendAuthorizedRequest } from '../../helpers/auth';
+import { trySendAuthorizedRequest } from '../../api/auth';
 
 
 const ModalMessage = ({ sellerId }) => {

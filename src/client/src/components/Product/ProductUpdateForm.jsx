@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { updateProduct } from "../../helpers/products";
+import { updateProduct } from "../../api/products";
 import styles from "./ProductCreationForm.module.css"
 import Button from "../UI/Button/Button"
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 const ProductCreationForm = ({product}) => {

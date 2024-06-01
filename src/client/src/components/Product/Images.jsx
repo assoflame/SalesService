@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { server } from "../../helpers/shared";
+import { server } from "../../api/shared";
 import styles from "./Images.module.css"
 
 

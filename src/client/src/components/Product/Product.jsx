@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../helpers/products";
+import { getProductById } from "../../api/products";
 import { useFetching } from "../../hooks/useFetching";
 import Loader from "../UI/Loader/Loader";
 import Images from "./Images";
@@ -12,8 +12,8 @@ import Button from "../UI/Button/Button";
 import Modal from "../UI/Modal/Modal"
 import ModalMessage from "../ModalMessage/ModalMessage"
 import Reviews from "../Reviews/Reviews";
-import { isAdmin, trySendAuthorizedRequest } from "../../helpers/auth";
-import { blockUser } from "../../helpers/admin";
+import { isAdmin, trySendAuthorizedRequest } from "../../api/auth";
+import { blockUser } from "../../api/admin";
 
 
 const Product = () => {

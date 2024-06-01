@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../../helpers/products";
+import { getProducts } from "../../api/products";
 import { useFetching } from "../../hooks/useFetching";
 import { Select } from "../../components/UI/Select/Select";
-import { getPagesCount } from "../../helpers/shared";
+import { getPagesCount } from "../../api/shared";
 import { usePagination } from "../../hooks/usePagination";
 import Loader from "../../components/UI/Loader/Loader";
 import Header from '../../components/UI/Header/Header';
@@ -14,7 +14,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import ProductCreationForm from "../../components/Product/ProductCreationForm";
 import Button from "../../components/UI/Button/Button";
 import Logout from "../../components/Auth/Logout"
-import { trySendAuthorizedRequest } from "../../helpers/auth";
+import { trySendAuthorizedRequest } from "../../api/auth";
 
 
 export const Products = () => {

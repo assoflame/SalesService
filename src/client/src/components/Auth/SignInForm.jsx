@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signIn } from "../../helpers/auth";
+import { signIn } from "../../api/auth";
 import styles from "./AuthForm.module.css"
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const SignInForm = () => {
     return (
         <form className={styles.form} onSubmit={async (e) => {
             e.preventDefault();
-            if((await signIn(form)).success){
+            if(await signIn(form)){
                 navigate(productsPage, {replace : true});
             }
         }}>
